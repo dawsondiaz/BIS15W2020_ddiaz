@@ -114,12 +114,11 @@ Do I make more money per week on blackjack or roulette?
 sumblackjack <- sum(blackjack, na.rm=TRUE)
 sumroulette <- sum(roulette, na.rm=TRUE)
 
-if (sumblackjack > sumroulette)
+if (sumblackjack > sumroulette) {
 print("Blackjack makes you more money")
-
-if (sumroulette > sumblackjack)
-print("Roulette makes you more money")
-
+} else {
+  print("Roulette makes you more money")
+}
 
 
 

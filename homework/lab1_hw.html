@@ -459,11 +459,12 @@ total_week</code></pre>
 <pre class="r"><code>sumblackjack &lt;- sum(blackjack, na.rm=TRUE)
 sumroulette &lt;- sum(roulette, na.rm=TRUE)
 
-if (sumblackjack &gt; sumroulette)
-print(&quot;Blackjack makes you more money&quot;)</code></pre>
+if (sumblackjack &gt; sumroulette) {
+print(&quot;Blackjack makes you more money&quot;)
+} else {
+  print(&quot;Roulette makes you more money&quot;)
+}</code></pre>
 <pre><code>## [1] &quot;Blackjack makes you more money&quot;</code></pre>
-<pre class="r"><code>if (sumroulette &gt; sumblackjack)
-print(&quot;Roulette makes you more money&quot;)</code></pre>
 <p>According to the analysis of the vectors, I should keep playing blackjack because I make more money with it per week than I do with roulette.</p>
 <p><br><br><br></p>
 </div>
