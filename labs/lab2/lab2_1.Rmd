@@ -39,6 +39,8 @@ Last time, you learned how to work with vectors. Today we will organize the vect
 
 Box office earnings for Harry Potter movies (in millions!). Notice that these are separate vectors.
 ```{r}
+## US earnings, Global Earnings (In millions)
+
 Philosophers_Stone <- c(317.5, 657.1)
 Chamber_of_Secrets <- c(261.9, 616.9)
 Prisoner_of_Azkaban <- c(249.5, 547.1)
@@ -49,7 +51,7 @@ Deathly_Hallows_1 <- c(295.9, 664.3)
 Deathly_Hallows_2 <- c(381.0, 960.5)
 ```
 
-Create a new object called `box_office`. Here we are using the `c` command to combine the vectors into one.
+Create a new object called `box_office`. Here we are using the `c` command to combine the vectors into one. (one vector)
 ```{r}
 box_office <- c(Philosophers_Stone, Chamber_of_Secrets, Prisoner_of_Azkaban, Goblet_of_Fire, Order_of_the_Phoenix, Half_Blood_Prince, Deathly_Hallows_1, Deathly_Hallows_2)
 box_office
@@ -99,7 +101,27 @@ all_harry_potter_matrix
 ## Practice
 1. What are the total earnings for each of the regions?  
 
-2. Add this information to the data matrix. Hint: you are adding a row, not a column.  
+```{r}
+
+colSums(all_harry_potter_matrix)
+
+region_total <- colSums(all_harry_potter_matrix)
+
+
+```
+
+2. Add this information to the data matrix. Hint: you are adding a row, not a column. 
+
+
+```{r}
+new_harry_potter_matrix <- rbind(all_harry_potter_matrix,region_total)
+new_harry_potter_matrix
+
+
+
+
+```
+
 
 ## Select elements in a data matrix
 The same methods of selecting elements in a vector apply to data matrices. We use `[]`. The following selects the value in the first column, second row.
@@ -134,6 +156,11 @@ spring_8 <- c(36.80, 36.45, 33.15)
 1. Build a data matrix that has the springs as rows and the columns as scientists.  
 ```{r}
 
+hot_spring <- c(spring_1, spring_2, spring_3, spring_4, spring_5, spring_6, spring_7, spring_8)
+
+hot_spring_matrix <- matrix(hot_spring, nrow = 8, byrow = T)
+hot_spring_matrix
+
 ```
 
 
@@ -146,16 +173,31 @@ springs <- c("Bluebell Spring", "Opal Spring", "Riverside Spring", "Too Hot Spri
 2. Use `colnames()` and `rownames()` to name the columns and rows.  
 ```{r}
 
+colnames(hot_spring_matrix) <- scientists
+rownames(hot_spring_matrix) <- springs
+
+hot_spring_matrix
+
 ```
 
 Calculate the mean temperature of all three springs. Notice the command `rowMeans`.
 ```{r}
-#mean_vector <- rowMeans(springs_matrix)
-#mean_vector
+mean_vector <- rowMeans(hot_spring_matrix)
+mean_vector
 ```
 
 3. Add `mean_vector` as a new column.  
 ```{r}
+
+new_hot_spring <- cbind(hot_spring_matrix, mean_vector)
+
+new_hot_spring
+
+columns <- c("Jill", "Steve", "Susan", "Mean")
+colnames(new_hot_spring) <- columns
+
+##How to add the correct name to the binded column?
+# Data matrix = stacked vectors
 
 ```
 
