@@ -3,7 +3,7 @@ title: "Lab 1 Homework"
 author: "Dawson Diaz"
 date: "Winter 2020"
 output:
-  html_document:
+  html_document: 
     keep_md: yes
     theme: spacelab
 ---
@@ -163,11 +163,20 @@ Thursday seems particularly unlucky for me, and I would probably avoid gambling 
 Do I make more money per week on blackjack or roulette?
 
 ```r
-sum(blackjack, na.rm=TRUE) > sum(roulette, na.rm=TRUE)
+sumblackjack <- sum(blackjack, na.rm=TRUE)
+sumroulette <- sum(roulette, na.rm=TRUE)
+
+if (sumblackjack > sumroulette)
+print("Blackjack makes you more money")
 ```
 
 ```
-## [1] TRUE
+## [1] "Blackjack makes you more money"
+```
+
+```r
+if (sumroulette > sumblackjack)
+print("Roulette makes you more money")
 ```
 According to the analysis of the vectors, I should keep playing blackjack because I make more money with it per week than I do with roulette.
 
