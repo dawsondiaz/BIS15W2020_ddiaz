@@ -91,7 +91,7 @@ kable(sleep[1,])
 
 ```{r}
 large <- subset(sleep, bodywt>=200)
-large
+kable(large)
 ```
 
 ```{r}
