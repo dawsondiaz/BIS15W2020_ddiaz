@@ -238,18 +238,27 @@ Cheetah   Acinonyx   carni   Carnivora   lc                     12.1          NA
 
 ```r
 large <- subset(sleep, bodywt>=200)
-kable(large)
+large
 ```
 
-     name               genus           vore    order            conservation    sleep_total   sleep_rem   sleep_cycle   awake   brainwt     bodywt
----  -----------------  --------------  ------  ---------------  -------------  ------------  ----------  ------------  ------  --------  ---------
-5    Cow                Bos             herbi   Artiodactyla     domesticated            4.0         0.7     0.6666667   20.00     0.423    600.000
-21   Asian elephant     Elephas         herbi   Proboscidea      en                      3.9          NA            NA   20.10     4.603   2547.000
-23   Horse              Equus           herbi   Perissodactyla   domesticated            2.9         0.6     1.0000000   21.10     0.655    521.000
-30   Giraffe            Giraffa         herbi   Artiodactyla     cd                      1.9         0.4            NA   22.10        NA    899.995
-31   Pilot whale        Globicephalus   carni   Cetacea          cd                      2.7         0.1            NA   21.35        NA    800.000
-36   African elephant   Loxodonta       herbi   Proboscidea      vu                      3.3          NA            NA   20.70     5.712   6654.000
-77   Brazilian tapir    Tapirus         herbi   Perissodactyla   vu                      4.4         1.0     0.9000000   19.60     0.169    207.501
+```
+##                name         genus  vore          order conservation sleep_total
+## 5               Cow           Bos herbi   Artiodactyla domesticated         4.0
+## 21   Asian elephant       Elephas herbi    Proboscidea           en         3.9
+## 23            Horse         Equus herbi Perissodactyla domesticated         2.9
+## 30          Giraffe       Giraffa herbi   Artiodactyla           cd         1.9
+## 31      Pilot whale Globicephalus carni        Cetacea           cd         2.7
+## 36 African elephant     Loxodonta herbi    Proboscidea           vu         3.3
+## 77  Brazilian tapir       Tapirus herbi Perissodactyla           vu         4.4
+##    sleep_rem sleep_cycle awake brainwt   bodywt
+## 5        0.7   0.6666667 20.00   0.423  600.000
+## 21        NA          NA 20.10   4.603 2547.000
+## 23       0.6   1.0000000 21.10   0.655  521.000
+## 30       0.4          NA 22.10      NA  899.995
+## 31       0.1          NA 21.35      NA  800.000
+## 36        NA          NA 20.70   5.712 6654.000
+## 77       1.0   0.9000000 19.60   0.169  207.501
+```
 
 
 ```r
