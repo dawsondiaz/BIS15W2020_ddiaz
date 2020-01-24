@@ -6,15 +6,14 @@ output:
   html_document:
     keep_md: yes
     theme: spacelab
+  pdf_document: default
 ---
 <br>
 
 ### Load the tidyverse
-```{r}
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
 #install.packages("tidyverse")
-#install.packages("knitr")
 library("tidyverse")
-library("knitr")
 ```
 
 <br>
@@ -81,7 +80,7 @@ First  column:
 
 First row:
 ```{r}
-kable(sleep[1,])
+sleep[1,]
 ```
 
 <br>
@@ -91,12 +90,12 @@ kable(sleep[1,])
 
 ```{r}
 large <- subset(sleep, bodywt>=200)
-kable(large)
+large
 ```
 
 ```{r}
 small <- subset(sleep, bodywt<=1)
-kable(small)
+small
 ```
 
 <br>
