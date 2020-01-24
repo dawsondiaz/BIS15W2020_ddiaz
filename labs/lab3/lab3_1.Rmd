@@ -88,15 +88,47 @@ glimpse(fish)
 ## Practice
 1. Load the data `mammal_lifehistories_v2.csv` and place it into a new object called `mammals`.
 
+```{r}
+mammals <- readr::read_csv("data/mammal_lifehistories_v2.csv")
+```
+
+
 2. Provide the dimensions of the data frame.
 
-3. Check the column names in the data frame. 
+```{r}
+dim(mammals)
+```
+
+3. Check the column names in the data frame.
+
+```{r}
+colnames(mammals)
+```
 
 4. Use `str()` to show the structure of the data frame and its individual columns; compare this to `glimpse()`. 
 
-5. Print out the first few rows of the data using the function `head()`.  
+```{r}
+str(mammals)
+```
+
+```{r}
+glimpse(mammals)
+```
+
+5. Print out the first few rows of the data using the function `head()`. 
+
+
+```{r}
+head(mammals, n=5)
+```
 
 6. Print out the last few rows using the function `tail()`.
+
+```{r}
+tail(mammals, n=5)
+```
+
+
 
 ## Tidyverse
 The [tidyverse](www.tidyverse.org) is a collection of packages that make workflows in R easier. The packages operate more intuitively than base R commands. Although not universal, the tidyverse has been adopted by many R users.  
@@ -111,9 +143,16 @@ fish <-
   readr::read_csv("data/Gaeta_etal_CLC_data.csv")
 ```
 
+```{r}
+fish
+```
+
+
+
 Let's say that we are interested only in the fish that occur in the lake labeled AL. We can use `filter()` to extract these observations to build a new data frame focused on our question.
 ```{r}
 filter(fish, lakeid == "AL")
+
 ```
 
 Similarly, if we are only interested in fish with a length greater than or equal to 350 we can use `filter()` to do this work.
@@ -148,17 +187,38 @@ filter(fish, length == 167 & length == 175)
 ## Practice
 1. Filter the `fish` data to include the samples from lake `DY`.
 
+```{r}
+filter(fish, lakeid=="DY")
+```
 
 2. Filter the data to include all lakes except AL.
 
+```{r}
+filter(fish, lakeid!= "AL")
+```
+
 
 3. Filter the data to include all lakes except AL and DY.
+
+```{r}
+filter(fish, lakeid!= "AL" & lakeid!="DY")
+```
 
 
 4. Filter the data to include all fish with a scale length greater than or equal to 11.
 
 
+```{r}
+filter(fish, scalelength>=11)
+```
+
+
+
 5. Filter the data to include fish only from lake AL and with a scalelength greater than or equal to 2 and less than or equal to 4.
+
+```{r}
+filter(fish, lakeid=="AL" & scalelength>=2 & scalelength<=4)
+```
 
 
 ## That's it, let's take a break!   
