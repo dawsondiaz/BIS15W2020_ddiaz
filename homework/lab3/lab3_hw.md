@@ -251,7 +251,7 @@ summary(homerange)
 
 **4. Are there NA's in your data? Show the code that you would use to verify this, please.**
 
-Yes, there are NA values in the data. This is verified by running the `anyNA` function
+Yes, there are NA values in the data. This is verified by running the `anyNA` function.
 
 ```r
 anyNA(homerange)
@@ -385,18 +385,147 @@ The snake species with the smallest homerange is *Bitis schenideri*. Found in th
 **8. You suspect that homerange and mass are correlated in birds. We need a ratio that facilitates exploration of this prediction. First, build a new dataframe called `hra_ratio` that is limited to genus, species, mean.mass.g, log10.mass, log10.hra. Arrange it in ascending order by mean mass in grams.**
 
 
+```r
+hra_ratio <- homerange %>% 
+  filter(taxon=="birds") %>% 
+  select(genus, species, mean.mass.g, log10.mass, log10.hra) %>% 
+  arrange(mean.mass.g)
+```
+
+
+```r
+hra_ratio
+```
+
+```
+## # A tibble: 140 x 5
+##    genus        species      mean.mass.g log10.mass log10.hra
+##    <chr>        <chr>              <dbl>      <dbl>     <dbl>
+##  1 regulus      regulus             5.15      0.712      4.30
+##  2 regulus      ignicapillus        5.3       0.724      4.22
+##  3 phylloscopus bonelli             7.5       0.875      4.54
+##  4 aegithalos   caudatus            8         0.903      4.62
+##  5 vireo        atricapillus        8.5       0.929      4.18
+##  6 setophaga    magnolia            8.6       0.934      3.86
+##  7 certhia      familiaris          8.77      0.943      4.67
+##  8 sylvia       undata              8.8       0.944      3.45
+##  9 setophaga    ruticilla           9         0.954      3.29
+## 10 setophaga    virens              9         0.954      3.81
+## # … with 130 more rows
+```
+
+
 <br>
 **9. Replace the existing `hra_ratio` dataframe with a new dataframe that adds a column calculating the ratio of log 10 hra to log 10 mass. Call it `hra.mass.ratio`. Arrange it in descending order by mean mass in grams.** 
+
+
+
+```r
+hra_ratio <- hra_ratio %>%
+  mutate(hra.mass.ratio = log10.hra/log10.mass) %>% 
+  arrange(desc(mean.mass.g))
+```
+
+
+
+```r
+hra_ratio
+```
+
+```
+## # A tibble: 140 x 6
+##    genus      species      mean.mass.g log10.mass log10.hra hra.mass.ratio
+##    <chr>      <chr>              <dbl>      <dbl>     <dbl>          <dbl>
+##  1 struthio   camelus            88250       4.95      7.93           1.60
+##  2 rhea       americana          25000       4.40      6.39           1.45
+##  3 rhea       pennata            15000       4.18      7.38           1.77
+##  4 aquila     chrysaetos          3000       3.48      7.44           2.14
+##  5 tetrao     urogallus           2936       3.47      6.74           1.94
+##  6 apteryx    australis           2320       3.37      5.67           1.68
+##  7 neophron   percnopterus        2203       3.34      7.80           2.33
+##  8 bubo       bubo                2191       3.34      7.20           2.16
+##  9 hieraaetus fasciatus           2049       3.31      7.29           2.20
+## 10 strigops   habroptilus         1941       3.29      5.29           1.61
+## # … with 130 more rows
+```
 
 
 <br>
 **10. What is the lowest mass for birds with a `hra.mass.ratio` greater than or equal to 4.0?**
 
 
+```r
+bird_hra_mass_ratio <- hra_ratio %>% 
+  filter(hra.mass.ratio >= 4.0) %>% 
+  arrange(mean.mass.g)
+```
+
+
+```r
+bird_hra_mass_ratio
+```
+
+```
+## # A tibble: 17 x 6
+##    genus        species      mean.mass.g log10.mass log10.hra hra.mass.ratio
+##    <chr>        <chr>              <dbl>      <dbl>     <dbl>          <dbl>
+##  1 regulus      regulus             5.15      0.712      4.30           6.04
+##  2 regulus      ignicapillus        5.3       0.724      4.22           5.82
+##  3 phylloscopus bonelli             7.5       0.875      4.54           5.19
+##  4 aegithalos   caudatus            8         0.903      4.62           5.12
+##  5 vireo        atricapillus        8.5       0.929      4.18           4.49
+##  6 setophaga    magnolia            8.6       0.934      3.86           4.13
+##  7 certhia      familiaris          8.77      0.943      4.67           4.95
+##  8 wilsonia     canadensis          9.3       0.968      4.01           4.14
+##  9 troglodytes  troglodytes         9.5       0.978      4.01           4.10
+## 10 cisticola    juncidis            9.8       0.991      4.16           4.20
+## 11 vireo        belli              10         1          4.07           4.07
+## 12 parus        carolinensis       10.1       1.00       4.18           4.16
+## 13 hippolais    polyglotta         11         1.04       4.48           4.30
+## 14 parus        palustris          11         1.04       4.36           4.18
+## 15 spizella     passerina          12.2       1.09       4.49           4.13
+## 16 contopus     virens             13.8       1.14       4.64           4.07
+## 17 motacilla    alba               21.2       1.33       5.89           4.44
+```
+
+
+The lowest mass is:
+
+```r
+min(bird_hra_mass_ratio$mean.mass.g)
+```
+
+```
+## [1] 5.15
+```
+
+
 <br>
-**11. Do a search online; what is the common name of the bird from #8 above? Place a link in your markdown file that takes us to a webpage with information on its biology.**  
+**11. Do a search online; what is the common name of the bird from #10 above? Place a link in your markdown file that takes us to a webpage with information on its biology.**  
+
+
+The bird with the lowest mass with a hra:mass ratio of >= 4.0 is *Regulus regulus* Its common name is the Goldcrest.<br> 
+To find out more click [here](https://avibase.bsc-eoc.org/species.jsp?avibaseid=A7CC62D6BD333F25)
+
 
 <br>
 **12. What is the `hra.mass.ratio` for an ostrich? Show your work, please.**  
+
+
+
+```r
+hra_ratio %>% 
+  select(genus, species, hra.mass.ratio) %>% 
+  filter(genus=="struthio")
+```
+
+```
+## # A tibble: 1 x 3
+##   genus    species hra.mass.ratio
+##   <chr>    <chr>            <dbl>
+## 1 struthio camelus           1.60
+```
+
+
 
 <br><br><br> 

@@ -65,7 +65,7 @@ summary(homerange)
 
 **4. Are there NA's in your data? Show the code that you would use to verify this, please.**
 
-Yes, there are NA values in the data. This is verified by running the `anyNA` function
+Yes, there are NA values in the data. This is verified by running the `anyNA` function.
 ```{r}
 anyNA(homerange)
 ```
@@ -128,19 +128,72 @@ The snake species with the smallest homerange is *Bitis schenideri*. Found in th
 <br><br>
 **8. You suspect that homerange and mass are correlated in birds. We need a ratio that facilitates exploration of this prediction. First, build a new dataframe called `hra_ratio` that is limited to genus, species, mean.mass.g, log10.mass, log10.hra. Arrange it in ascending order by mean mass in grams.**
 
+```{r}
+hra_ratio <- homerange %>% 
+  filter(taxon=="birds") %>% 
+  select(genus, species, mean.mass.g, log10.mass, log10.hra) %>% 
+  arrange(mean.mass.g)
+```
+
+```{r}
+hra_ratio
+```
+
 
 <br>
 **9. Replace the existing `hra_ratio` dataframe with a new dataframe that adds a column calculating the ratio of log 10 hra to log 10 mass. Call it `hra.mass.ratio`. Arrange it in descending order by mean mass in grams.** 
 
 
+```{r}
+hra_ratio <- hra_ratio %>%
+  mutate(hra.mass.ratio = log10.hra/log10.mass) %>% 
+  arrange(desc(mean.mass.g))
+```
+
+
+```{r}
+hra_ratio
+```
+
+
 <br>
 **10. What is the lowest mass for birds with a `hra.mass.ratio` greater than or equal to 4.0?**
 
+```{r}
+bird_hra_mass_ratio <- hra_ratio %>% 
+  filter(hra.mass.ratio >= 4.0) %>% 
+  arrange(mean.mass.g)
+```
+
+```{r}
+bird_hra_mass_ratio
+```
+
+
+The lowest mass is:
+```{r}
+min(bird_hra_mass_ratio$mean.mass.g)
+```
+
 
 <br>
-**11. Do a search online; what is the common name of the bird from #8 above? Place a link in your markdown file that takes us to a webpage with information on its biology.**  
+**11. Do a search online; what is the common name of the bird from #10 above? Place a link in your markdown file that takes us to a webpage with information on its biology.**  
+
+
+The bird with the lowest mass with a hra:mass ratio of >= 4.0 is *Regulus regulus* Its common name is the Goldcrest.<br> 
+To find out more click [here](https://avibase.bsc-eoc.org/species.jsp?avibaseid=A7CC62D6BD333F25)
+
 
 <br>
 **12. What is the `hra.mass.ratio` for an ostrich? Show your work, please.**  
+
+
+```{r}
+hra_ratio %>% 
+  select(genus, species, hra.mass.ratio) %>% 
+  filter(genus=="struthio")
+```
+
+
 
 <br><br><br> 
