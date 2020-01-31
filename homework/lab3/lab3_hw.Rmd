@@ -141,7 +141,7 @@ hra_ratio
 
 
 <br>
-**9. Replace the existing `hra_ratio` dataframe with a new dataframe that adds a column calculating the ratio of log 10 hra to log 10 mass. Call it `hra.mass.ratio`. Arrange it in descending order by mean mass in grams.** 
+**9. Replace the existing `hra_ratio` dataframe with a new dataframe that adds a column calculating the ratio of log 10 hra to log 10 mass. Call it `hra.mass.ratio`. Arrange it in descending order by mean mass in grams.**
 
 
 ```{r}
@@ -177,7 +177,7 @@ min(bird_hra_mass_ratio$mean.mass.g)
 
 
 <br>
-**11. Do a search online; what is the common name of the bird from #10 above? Place a link in your markdown file that takes us to a webpage with information on its biology.**  
+**11. Do a search online; what is the common name of the bird from #10 above? Place a link in your markdown file that takes us to a webpage with information on its biology.**
 
 
 The bird with the lowest mass with a hra:mass ratio of >= 4.0 is *Regulus regulus* Its common name is the Goldcrest.<br> 
@@ -185,7 +185,7 @@ To find out more click [here](https://avibase.bsc-eoc.org/species.jsp?avibaseid=
 
 
 <br>
-**12. What is the `hra.mass.ratio` for an ostrich? Show your work, please.**  
+**12. What is the `hra.mass.ratio` for an ostrich? Show your work, please.**
 
 
 ```{r}
