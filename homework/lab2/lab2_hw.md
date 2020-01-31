@@ -30,17 +30,17 @@ msleep
 ## # A tibble: 83 x 11
 ##    name  genus vore  order conservation sleep_total sleep_rem sleep_cycle awake
 ##    <chr> <chr> <chr> <chr> <chr>              <dbl>     <dbl>       <dbl> <dbl>
-##  1 Chee<U+2026> Acin<U+2026> carni Carn<U+2026> lc                  12.1      NA        NA      11.9
-##  2 Owl <U+2026> Aotus omni  Prim<U+2026> <NA>                17         1.8      NA       7  
-##  3 Moun<U+2026> Aplo<U+2026> herbi Rode<U+2026> nt                  14.4       2.4      NA       9.6
-##  4 Grea<U+2026> Blar<U+2026> omni  Sori<U+2026> lc                  14.9       2.3       0.133   9.1
-##  5 Cow   Bos   herbi Arti<U+2026> domesticated         4         0.7       0.667  20  
-##  6 Thre<U+2026> Brad<U+2026> herbi Pilo<U+2026> <NA>                14.4       2.2       0.767   9.6
-##  7 Nort<U+2026> Call<U+2026> carni Carn<U+2026> vu                   8.7       1.4       0.383  15.3
-##  8 Vesp<U+2026> Calo<U+2026> <NA>  Rode<U+2026> <NA>                 7        NA        NA      17  
-##  9 Dog   Canis carni Carn<U+2026> domesticated        10.1       2.9       0.333  13.9
-## 10 Roe <U+2026> Capr<U+2026> herbi Arti<U+2026> lc                   3        NA        NA      21  
-## # <U+2026> with 73 more rows, and 2 more variables: brainwt <dbl>, bodywt <dbl>
+##  1 Chee… Acin… carni Carn… lc                  12.1      NA        NA      11.9
+##  2 Owl … Aotus omni  Prim… <NA>                17         1.8      NA       7  
+##  3 Moun… Aplo… herbi Rode… nt                  14.4       2.4      NA       9.6
+##  4 Grea… Blar… omni  Sori… lc                  14.9       2.3       0.133   9.1
+##  5 Cow   Bos   herbi Arti… domesticated         4         0.7       0.667  20  
+##  6 Thre… Brad… herbi Pilo… <NA>                14.4       2.2       0.767   9.6
+##  7 Nort… Call… carni Carn… vu                   8.7       1.4       0.383  15.3
+##  8 Vesp… Calo… <NA>  Rode… <NA>                 7        NA        NA      17  
+##  9 Dog   Canis carni Carn… domesticated        10.1       2.9       0.333  13.9
+## 10 Roe … Capr… herbi Arti… lc                   3        NA        NA      21  
+## # … with 73 more rows, and 2 more variables: brainwt <dbl>, bodywt <dbl>
 ```
 <br>
 
@@ -91,17 +91,17 @@ glimpse(sleep)
 ```
 ## Observations: 83
 ## Variables: 11
-## $ name         <chr> "Cheetah", "Owl monkey", "Mountain beaver", "Greater sho<U+2026>
-## $ genus        <chr> "Acinonyx", "Aotus", "Aplodontia", "Blarina", "Bos", "Br<U+2026>
-## $ vore         <chr> "carni", "omni", "herbi", "omni", "herbi", "herbi", "car<U+2026>
-## $ order        <chr> "Carnivora", "Primates", "Rodentia", "Soricomorpha", "Ar<U+2026>
-## $ conservation <chr> "lc", NA, "nt", "lc", "domesticated", NA, "vu", NA, "dom<U+2026>
-## $ sleep_total  <dbl> 12.1, 17.0, 14.4, 14.9, 4.0, 14.4, 8.7, 7.0, 10.1, 3.0, <U+2026>
-## $ sleep_rem    <dbl> NA, 1.8, 2.4, 2.3, 0.7, 2.2, 1.4, NA, 2.9, NA, 0.6, 0.8,<U+2026>
-## $ sleep_cycle  <dbl> NA, NA, NA, 0.1333333, 0.6666667, 0.7666667, 0.3833333, <U+2026>
-## $ awake        <dbl> 11.9, 7.0, 9.6, 9.1, 20.0, 9.6, 15.3, 17.0, 13.9, 21.0, <U+2026>
-## $ brainwt      <dbl> NA, 0.01550, NA, 0.00029, 0.42300, NA, NA, NA, 0.07000, <U+2026>
-## $ bodywt       <dbl> 50.000, 0.480, 1.350, 0.019, 600.000, 3.850, 20.490, 0.0<U+2026>
+## $ name         <chr> "Cheetah", "Owl monkey", "Mountain beaver", "Greater sho…
+## $ genus        <chr> "Acinonyx", "Aotus", "Aplodontia", "Blarina", "Bos", "Br…
+## $ vore         <chr> "carni", "omni", "herbi", "omni", "herbi", "herbi", "car…
+## $ order        <chr> "Carnivora", "Primates", "Rodentia", "Soricomorpha", "Ar…
+## $ conservation <chr> "lc", NA, "nt", "lc", "domesticated", NA, "vu", NA, "dom…
+## $ sleep_total  <dbl> 12.1, 17.0, 14.4, 14.9, 4.0, 14.4, 8.7, 7.0, 10.1, 3.0, …
+## $ sleep_rem    <dbl> NA, 1.8, 2.4, 2.3, 0.7, 2.2, 1.4, NA, 2.9, NA, 0.6, 0.8,…
+## $ sleep_cycle  <dbl> NA, NA, NA, 0.1333333, 0.6666667, 0.7666667, 0.3833333, …
+## $ awake        <dbl> 11.9, 7.0, 9.6, 9.1, 20.0, 9.6, 15.3, 17.0, 13.9, 21.0, …
+## $ brainwt      <dbl> NA, 0.01550, NA, 0.00029, 0.42300, NA, NA, NA, 0.07000, …
+## $ bodywt       <dbl> 50.000, 0.480, 1.350, 0.019, 600.000, 3.850, 20.490, 0.0…
 ```
 
 <br>
