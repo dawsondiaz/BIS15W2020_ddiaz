@@ -1,83 +1,196 @@
 ---
 title: "Lab 4 Homework"
-author: "Please Add Your Name Here"
-date: "Please Add the Date Here"
+author: "Dawson Diaz"
+date: "February 7th, 2020"
 output:
-  html_document:
+  html_document: 
+    keep_md: yes
     theme: spacelab
-    toc: no
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Instructions
-Answer the following questions and complete the exercises in RMarkdown. Please embed all of your code and push your final work to your repository. Your final lab report should be organized, clean, and run free from errors. Remember, you must remove any `#` for included code chunks to run.  
-
 ## Load the tidyverse
 ```{r message=FALSE, warning=FALSE}
 library(tidyverse)
 ```
 
-For this assignment we are going to work with a large dataset from the [United Nations Food and Agriculture Organization](http://www.fao.org/about/en/) on world fisheries. First, load the data.  
+## Problems
 
-1. Load the data `FAO_1950to2012_111914.csv` as a new object titled `fisheries`.
-
-
-2. What are the names of the columns? Do you see any potential problems with the column names?
-
-
-3. What is the structure of the data? Show the classes of each variable.
+The data used for this assignment are from the [United Nations Food and Agriculture Organization](http://www.fao.org/about/en/) on world fisheries. 
+<br>
+<br>
+***1. Load the data `FAO_1950to2012_111914.csv` as a new object titled `fisheries`.***
 
 
-4. Think about the classes. Will any present problems? Make any changes you think are necessary below.
+```{r message=FALSE, warning=FALSE}
+fisheries <- readr::read_csv("data/FAO_1950to2012_111914.csv")
+```
+
+<br>
+
+***2. What are the names of the columns? Do you see any potential problems with the column names?***
+
+```{r}
+colnames(fisheries)
+```
+There are a couple of potential problems with the column names, (1) some names have spaces, (2) there are data contained in the columns-- there are many individual columns that are levels of the variable "year" that should just be one column.
+
+<br>
 
 
-5. How many countries are represented in the data? Provide a count.
+***3. What is the structure of the data? Show the classes of each variable.***
+
+This data is structured in wide format. While this is perhaps easiest to enter in data, it creates problems for analysis. The classes of each variable are shown usinf the `lapply()` function.
+
+```{r}
+lapply(fisheries, class)
+```
 
 
-6. What are the names of the countries?
+<br> 
+***4. Think about the classes. Will any present problems? Make any changes you think are necessary below.***
+
+The values of each year, which are numbers are all characterized as `character` when they should be `numeric`. This can be more efficicently fixed later when the data is tidy.
+Meanwhile other columns are `characters` when they would be better treated as a `factor`
 
 
-7. Use `rename()` to rename the columns and make them easier to use. The new column names should be:  
-+ country
-+ commname
-+ ASFIS_sciname
-+ ASFIS_spcode
-+ ISSCAAP_spgroup
-+ ISSCAAP_spgroupname
-+ FAO_area
-+ unit
-
-8. Are these data tidy? Why or why not, and, how do you know? Use the appropriate pivot function to tidy the data. Remove the NA's. Put the tidy data frame into a new object `fisheries_tidy`.  
+```{r}
+fisheries$Country <- as.factor(fisheries$Country)
+fisheries$`ISSCAAP taxonomic group` <- as.factor(fisheries$`ISSCAAP taxonomic group`)
+fisheries$`ASFIS species#` <- as.factor(fisheries$`ASFIS species#`)
+fisheries$`FAO major fishing area` <- as.factor(fisheries$`FAO major fishing area`)
+fisheries$`Common name` <- as.factor(fisheries$`Common name`)
+fisheries$`ASFIS species name` <- as.factor(fisheries$`ASFIS species name`)
+```
 
 
-9. Refocus the data only to include country, ISSCAAP_spgroupname, ASFIS_spcode, ASFIS_sciname, year, and catch.
+<br>
+
+***5. How many countries are represented in the data? Provide a count.***
+
+```{r}
+# Get the number of levels of the column variable Country
+nlevels(fisheries$Country)
+```
 
 
-10. Re-check the classes of `fisheries_tidy2`. Notice that "catch" is shown as a character! This is a problem because we will want to treat it as a numeric. How will you deal with this?
+<br>
+
+***6. What are the names of the countries?***
+
+```{r}
+levels(fisheries$Country)
+```
+
+<br>
+***7. Use `rename()` to rename the columns and make them easier to use.***
+
+```{r}
+fisheries <- fisheries %>% 
+  
+  dplyr::rename(
+    country = Country,
+    commname = `Common name`,
+    ASFIS_sciname = `ASFIS species name`,
+    ASFIS_spcode = `ASFIS species#`,
+    ISSCAAP_spgroup = `ISSCAAP group#`,
+    ISSCAAP_spgroupname = `ISSCAAP taxonomic group`,
+    FAO_area = `FAO major fishing area`,
+    unit = Measure
+  )
+```
+
+<br>
+
+***8. Are these data tidy? Why or why not, and, how do you know? Use the appropriate pivot function to tidy the data. Remove the NA's. Put the tidy data frame into a new object `fisheries_tidy`.***  
+
+These data are not tidy. 
+
+```{r}
+fisheries_tidy <- fisheries %>% 
+  pivot_longer(
+    cols= "1950":"2012",
+    names_to = "year",
+    values_to = "catch_tonnes",
+    values_drop_na = TRUE
+  )
+```
 
 
-11. Based on the ASFIS_spcode, how many distinct taxa were caught as part of these data?
+<br>
+***9. Refocus the data only to include country, ISSCAAP_spgroupname, ASFIS_spcode, ASFIS_sciname, year, and catch.***
+
+```{r}
+fisheries_tidy2 <- fisheries_tidy %>% 
+  select(country, ISSCAAP_spgroupname, ASFIS_spcode, ASFIS_sciname, year, catch_tonnes)
+```
+
+```{r}
+fisheries_tidy2
+```
 
 
-12. Which country had the largest overall catch in the year 2000?
+<br>
+***10. Re-check the classes of `fisheries_tidy2`. Notice that "catch" is shown as a character! This is a problem because we will want to treat it as a numeric. How will you deal with this?***
 
 
-13. Which country caught the most sardines (_Sardina_) between the years 1990-2000?
+```{r warning=FALSE}
+fisheries_tidy2$catch_tonnes <- as.numeric(fisheries_tidy2$catch_tonnes)
+```
+```{r}
+lapply(fisheries_tidy2, class)
+```
+
+<br>
+
+***11. Based on the ASFIS_spcode, how many distinct taxa were caught as part of these data?***
+
+```{r}
+n_distinct(fisheries_tidy2$ASFIS_spcode)
+```
 
 
-14. Which five countries caught the most cephalopods between 2008-2012?
+<br>
+
+***12. Which country had the largest overall catch in the year 2000?***
 
 
-15. Given the top five countries from question 12 above, which species was the highest catch total? The lowest?
+```{r}
+global_total_catch_2000 <- fisheries_tidy2 %>% 
+  group_by(country) %>%
+  filter(year=="2000") %>% 
+  summarize (
+    total_catch = sum(catch_tonnes, na.rm=TRUE) 
+  ) %>% 
+  arrange(desc(total_catch))
+  
+```
+
+```{r}
+head(global_total_catch_2000)
+```
+In 2000, Peru was the country with the largest total catch (in tonnes).
+
+<br>
 
 
-16. In some cases, the taxonomy of the fish being caught is unclear. Make a new data frame called `coastal_fish` that shows the taxonomic composition of "Miscellaneous coastal fishes" within the ISSCAAP_spgroupname column.
+***13. Which country caught the most sardines (_Sardina_) between the years 1990-2000?***
 
 
-17. Use the data to do at least one exploratory analysis of your choice. What can you learn?
+<br>
+***14. Which five countries caught the most cephalopods between 2008-2012?***
 
-## Push your final code to GitHub!
-Please be sure that you check the `keep md` file in the knit preferences.   
+<br>
+***15. Given the top five countries from question 12 above, which species was the highest catch total? The lowest?***
+
+<br>
+***16. In some cases, the taxonomy of the fish being caught is unclear. Make a new data frame called `coastal_fish` that shows the taxonomic composition of "Miscellaneous coastal fishes" within the ISSCAAP_spgroupname column.***
+
+<br>
+***17. Use the data to do at least one exploratory analysis of your choice. What can you learn?***
+
+
+<br><br><br>
