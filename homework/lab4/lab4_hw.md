@@ -361,17 +361,17 @@ levels(fisheries$Country)
 ##  [19] "Bosnia and Herzegovina"    "Brazil"                   
 ##  [21] "British Indian Ocean Ter"  "British Virgin Islands"   
 ##  [23] "Brunei Darussalam"         "Bulgaria"                 
-##  [25] "Cabo Verde"                "Cambodia"                 
-##  [27] "Cameroon"                  "Canada"                   
-##  [29] "Cayman Islands"            "Channel Islands"          
-##  [31] "Chile"                     "China"                    
-##  [33] "China, Hong Kong SAR"      "China, Macao SAR"         
-##  [35] "Colombia"                  "Comoros"                  
-##  [37] "Congo, Dem. Rep. of the"   "Congo, Republic of"       
-##  [39] "Cook Islands"              "Costa Rica"               
-##  [41] "Croatia"                   "Cuba"                     
-##  [43] "Cura\xe7ao"                "Cyprus"                   
-##  [45] "C\xf4te d'Ivoire"          "Denmark"                  
+##  [25] "C<f4>te d'Ivoire"          "Cabo Verde"               
+##  [27] "Cambodia"                  "Cameroon"                 
+##  [29] "Canada"                    "Cayman Islands"           
+##  [31] "Channel Islands"           "Chile"                    
+##  [33] "China"                     "China, Hong Kong SAR"     
+##  [35] "China, Macao SAR"          "Colombia"                 
+##  [37] "Comoros"                   "Congo, Dem. Rep. of the"  
+##  [39] "Congo, Republic of"        "Cook Islands"             
+##  [41] "Costa Rica"                "Croatia"                  
+##  [43] "Cuba"                      "Cura<e7>ao"               
+##  [45] "Cyprus"                    "Denmark"                  
 ##  [47] "Djibouti"                  "Dominica"                 
 ##  [49] "Dominican Republic"        "Ecuador"                  
 ##  [51] "Egypt"                     "El Salvador"              
@@ -422,8 +422,8 @@ levels(fisheries$Country)
 ## [141] "Philippines"               "Pitcairn Islands"         
 ## [143] "Poland"                    "Portugal"                 
 ## [145] "Puerto Rico"               "Qatar"                    
-## [147] "Romania"                   "Russian Federation"       
-## [149] "R\xe9union"                "Saint Barth\xe9lemy"      
+## [147] "R<e9>union"                "Romania"                  
+## [149] "Russian Federation"        "Saint Barth<e9>lemy"      
 ## [151] "Saint Helena"              "Saint Kitts and Nevis"    
 ## [153] "Saint Lucia"               "Saint Vincent/Grenadines" 
 ## [155] "SaintMartin"               "Samoa"                    
@@ -443,10 +443,10 @@ levels(fisheries$Country)
 ## [183] "Tokelau"                   "Tonga"                    
 ## [185] "Trinidad and Tobago"       "Tunisia"                  
 ## [187] "Turkey"                    "Turks and Caicos Is."     
-## [189] "Tuvalu"                    "Ukraine"                  
-## [191] "Un. Sov. Soc. Rep."        "United Arab Emirates"     
-## [193] "United Kingdom"            "United States of America" 
-## [195] "Uruguay"                   "US Virgin Islands"        
+## [189] "Tuvalu"                    "US Virgin Islands"        
+## [191] "Ukraine"                   "Un. Sov. Soc. Rep."       
+## [193] "United Arab Emirates"      "United Kingdom"           
+## [195] "United States of America"  "Uruguay"                  
 ## [197] "Vanuatu"                   "Venezuela, Boliv Rep of"  
 ## [199] "Viet Nam"                  "Wallis and Futuna Is."    
 ## [201] "Western Sahara"            "Yemen"                    
@@ -518,7 +518,7 @@ fisheries_tidy2
 ##  8 Albania Sharks, rays, chimaeras 10903XXXXX   Squatinidae   2002  79          
 ##  9 Albania Sharks, rays, chimaeras 10903XXXXX   Squatinidae   2003  1           
 ## 10 Albania Sharks, rays, chimaeras 10903XXXXX   Squatinidae   2004  4           
-## # … with 376,761 more rows
+## # <U+2026> with 376,761 more rows
 ```
 
 

@@ -685,17 +685,17 @@ nlevels(fisheries$Country)</code></pre>
 ##  [19] &quot;Bosnia and Herzegovina&quot;    &quot;Brazil&quot;                   
 ##  [21] &quot;British Indian Ocean Ter&quot;  &quot;British Virgin Islands&quot;   
 ##  [23] &quot;Brunei Darussalam&quot;         &quot;Bulgaria&quot;                 
-##  [25] &quot;Cabo Verde&quot;                &quot;Cambodia&quot;                 
-##  [27] &quot;Cameroon&quot;                  &quot;Canada&quot;                   
-##  [29] &quot;Cayman Islands&quot;            &quot;Channel Islands&quot;          
-##  [31] &quot;Chile&quot;                     &quot;China&quot;                    
-##  [33] &quot;China, Hong Kong SAR&quot;      &quot;China, Macao SAR&quot;         
-##  [35] &quot;Colombia&quot;                  &quot;Comoros&quot;                  
-##  [37] &quot;Congo, Dem. Rep. of the&quot;   &quot;Congo, Republic of&quot;       
-##  [39] &quot;Cook Islands&quot;              &quot;Costa Rica&quot;               
-##  [41] &quot;Croatia&quot;                   &quot;Cuba&quot;                     
-##  [43] &quot;Cura\xe7ao&quot;                &quot;Cyprus&quot;                   
-##  [45] &quot;C\xf4te d'Ivoire&quot;          &quot;Denmark&quot;                  
+##  [25] &quot;C&lt;f4&gt;te d'Ivoire&quot;          &quot;Cabo Verde&quot;               
+##  [27] &quot;Cambodia&quot;                  &quot;Cameroon&quot;                 
+##  [29] &quot;Canada&quot;                    &quot;Cayman Islands&quot;           
+##  [31] &quot;Channel Islands&quot;           &quot;Chile&quot;                    
+##  [33] &quot;China&quot;                     &quot;China, Hong Kong SAR&quot;     
+##  [35] &quot;China, Macao SAR&quot;          &quot;Colombia&quot;                 
+##  [37] &quot;Comoros&quot;                   &quot;Congo, Dem. Rep. of the&quot;  
+##  [39] &quot;Congo, Republic of&quot;        &quot;Cook Islands&quot;             
+##  [41] &quot;Costa Rica&quot;                &quot;Croatia&quot;                  
+##  [43] &quot;Cuba&quot;                      &quot;Cura&lt;e7&gt;ao&quot;               
+##  [45] &quot;Cyprus&quot;                    &quot;Denmark&quot;                  
 ##  [47] &quot;Djibouti&quot;                  &quot;Dominica&quot;                 
 ##  [49] &quot;Dominican Republic&quot;        &quot;Ecuador&quot;                  
 ##  [51] &quot;Egypt&quot;                     &quot;El Salvador&quot;              
@@ -746,8 +746,8 @@ nlevels(fisheries$Country)</code></pre>
 ## [141] &quot;Philippines&quot;               &quot;Pitcairn Islands&quot;         
 ## [143] &quot;Poland&quot;                    &quot;Portugal&quot;                 
 ## [145] &quot;Puerto Rico&quot;               &quot;Qatar&quot;                    
-## [147] &quot;Romania&quot;                   &quot;Russian Federation&quot;       
-## [149] &quot;R\xe9union&quot;                &quot;Saint Barth\xe9lemy&quot;      
+## [147] &quot;R&lt;e9&gt;union&quot;                &quot;Romania&quot;                  
+## [149] &quot;Russian Federation&quot;        &quot;Saint Barth&lt;e9&gt;lemy&quot;      
 ## [151] &quot;Saint Helena&quot;              &quot;Saint Kitts and Nevis&quot;    
 ## [153] &quot;Saint Lucia&quot;               &quot;Saint Vincent/Grenadines&quot; 
 ## [155] &quot;SaintMartin&quot;               &quot;Samoa&quot;                    
@@ -767,10 +767,10 @@ nlevels(fisheries$Country)</code></pre>
 ## [183] &quot;Tokelau&quot;                   &quot;Tonga&quot;                    
 ## [185] &quot;Trinidad and Tobago&quot;       &quot;Tunisia&quot;                  
 ## [187] &quot;Turkey&quot;                    &quot;Turks and Caicos Is.&quot;     
-## [189] &quot;Tuvalu&quot;                    &quot;Ukraine&quot;                  
-## [191] &quot;Un. Sov. Soc. Rep.&quot;        &quot;United Arab Emirates&quot;     
-## [193] &quot;United Kingdom&quot;            &quot;United States of America&quot; 
-## [195] &quot;Uruguay&quot;                   &quot;US Virgin Islands&quot;        
+## [189] &quot;Tuvalu&quot;                    &quot;US Virgin Islands&quot;        
+## [191] &quot;Ukraine&quot;                   &quot;Un. Sov. Soc. Rep.&quot;       
+## [193] &quot;United Arab Emirates&quot;      &quot;United Kingdom&quot;           
+## [195] &quot;United States of America&quot;  &quot;Uruguay&quot;                  
 ## [197] &quot;Vanuatu&quot;                   &quot;Venezuela, Boliv Rep of&quot;  
 ## [199] &quot;Viet Nam&quot;                  &quot;Wallis and Futuna Is.&quot;    
 ## [201] &quot;Western Sahara&quot;            &quot;Yemen&quot;                    
@@ -815,7 +815,7 @@ nlevels(fisheries$Country)</code></pre>
 ##  8 Albania Sharks, rays, chimaeras 10903XXXXX   Squatinidae   2002  79          
 ##  9 Albania Sharks, rays, chimaeras 10903XXXXX   Squatinidae   2003  1           
 ## 10 Albania Sharks, rays, chimaeras 10903XXXXX   Squatinidae   2004  4           
-## # … with 376,761 more rows</code></pre>
+## # &lt;U+2026&gt; with 376,761 more rows</code></pre>
 <p><br> <strong><em>10. Re-check the classes of <code>fisheries_tidy2</code>. Notice that “catch” is shown as a character! This is a problem because we will want to treat it as a numeric. How will you deal with this?</em></strong></p>
 <pre class="r"><code>fisheries_tidy2$catch_tonnes &lt;- as.numeric(fisheries_tidy2$catch_tonnes)</code></pre>
 <pre class="r"><code>lapply(fisheries_tidy2, class)</code></pre>
