@@ -578,7 +578,7 @@ n_distinct(fisheries_tidy2$ASFIS_spcode)
 ```r
 global_total_catch_2000 <- fisheries_tidy2 %>% 
   group_by(country) %>%
-  filter(year=="2000") %>% 
+  filter(year==2000) %>% 
   summarize (
     total_catch = sum(catch_tonnes, na.rm=TRUE) 
   ) %>% 
@@ -609,17 +609,424 @@ In 2000, Peru was the country with the largest total catch (in tonnes).
 ***13. Which country caught the most sardines (_Sardina_) between the years 1990-2000?***
 
 
+```r
+fisheries_tidy2$year <- as.numeric(fisheries_tidy2$year)
+fisheries_tidy2$ASFIS_sciname <- as.character(fisheries_tidy2$ASFIS_sciname)
+```
+
+
+```r
+sardine_total <- fisheries_tidy2 %>% 
+  select(year, ASFIS_sciname, ISSCAAP_spgroupname, country, catch_tonnes) %>%
+  filter(year >=1990, year<=2000, ASFIS_sciname=="Sardina pilchardus") %>% 
+  group_by(country) %>% 
+  summarize(sardina_catch_tonnes = sum(catch_tonnes, na.rm=TRUE)) %>% 
+  arrange(desc(sardina_catch_tonnes))
+```
+
+
+```r
+head(sardine_total)
+```
+
+```
+## # A tibble: 6 x 2
+##   country            sardina_catch_tonnes
+##   <fct>                             <dbl>
+## 1 Morocco                         4785190
+## 2 Spain                           1425317
+## 3 Russian Federation              1035139
+## 4 Portugal                         926318
+## 5 Ukraine                          784730
+## 6 Italy                            377907
+```
+Between 1990 and 2000, Morocco caught the most Sardina pilchardus with 4785190 tonnes caught.
+
+
+
 <br>
 ***14. Which five countries caught the most cephalopods between 2008-2012?***
+
+
+```r
+ cephalopod_total <- fisheries_tidy2 %>% 
+  select(country, year, ISSCAAP_spgroupname, catch_tonnes) %>% 
+  filter(ISSCAAP_spgroupname == "Squids, cuttlefishes, octopuses") %>% 
+  filter(year >=2008, year <=2012) %>% 
+  group_by(country) %>% 
+  summarize(cephalopod_catch_tonnes = sum(catch_tonnes, na.rm=TRUE)) %>% 
+  arrange(desc(cephalopod_catch_tonnes))
+```
+
+
+```r
+head(cephalopod_total)
+```
+
+```
+## # A tibble: 6 x 2
+##   country            cephalopod_catch_tonnes
+##   <fct>                                <dbl>
+## 1 China                              4785139
+## 2 Peru                               2274232
+## 3 Korea, Republic of                 1535454
+## 4 Japan                              1394041
+## 5 Chile                               723186
+## 6 Indonesia                           684567
+```
+
+Between 2008 and 2012, China caught the most cepalopods with 4785139 tonnes caught.
+
 
 <br>
 ***15. Given the top five countries from question 12 above, which species was the highest catch total? The lowest?***
 
+The top five countries with the highest global catch in 2000 are: Peru, Japan, The United States, Chile, and Indonesia. 
+
+
+```r
+top5 <- c("Peru", "Japan","United States of America", "Chile", "Indonesia")
+```
+
+
+
+```r
+top5_catch <- fisheries_tidy2 %>% 
+  select(country, year, ASFIS_sciname, catch_tonnes) %>% 
+  filter(year==2000) %>% 
+  filter(country %in% top5) %>% 
+  group_by(ASFIS_sciname) %>% 
+  summarize(
+    catch_tonnes = max(catch_tonnes, na.rm=TRUE)
+  ) %>% 
+  arrange(desc(catch_tonnes))
+```
+
+Among the top 5 countries with the highest catch in 2000, `Engraulis ringens` was the most caught fish.
+
+```r
+top_n(top5_catch, 5, catch_tonnes)
+```
+
+```
+## # A tibble: 5 x 2
+##   ASFIS_sciname         catch_tonnes
+##   <chr>                        <dbl>
+## 1 Engraulis ringens          9575717
+## 2 Trachurus murphyi          1234299
+## 3 Theragra chalcogramma      1182438
+## 4 Strangomera bentincki       722522
+## 5 Brevoortia patronus         591434
+```
+
+
+
+```r
+top_n(top5_catch,-19, catch_tonnes)
+```
+
+```
+## # A tibble: 19 x 2
+##    ASFIS_sciname              catch_tonnes
+##    <chr>                             <dbl>
+##  1 Brotula barbata                       1
+##  2 Carcharias taurus                     1
+##  3 Carcharodon carcharias                1
+##  4 Caulolatilus microps                  1
+##  5 Lobotes surinamensis                  1
+##  6 Pleuronichthys decurrens              1
+##  7 Tawera gayi                           1
+##  8 Tresus spp                            1
+##  9 Ammodytes spp                      -Inf
+## 10 Asteroidea                         -Inf
+## 11 Carcharhinus falciformis           -Inf
+## 12 Carcharhinus leucas                -Inf
+## 13 Euthynnus lineatus                 -Inf
+## 14 Ginglymostoma cirratum             -Inf
+## 15 Lachnolaimus maximus               -Inf
+## 16 Microgadus proximus                -Inf
+## 17 Orthopristis chrysoptera           -Inf
+## 18 Osmerus mordax                     -Inf
+## 19 Rhizoprionodon terraenovae         -Inf
+```
+
+Among the top 5 countries with the highest catch in 2000, `Tresus spp`, `Tawera gayi`, `Pleuronichthys decurrens`, `Lobotes surinamensis`, `Caulolatilus microps`, `Carcharodon carcharias` `Carcharias taurus` and `Brotula barbata` were all tied for the least caught.
+
+
 <br>
 ***16. In some cases, the taxonomy of the fish being caught is unclear. Make a new data frame called `coastal_fish` that shows the taxonomic composition of "Miscellaneous coastal fishes" within the ISSCAAP_spgroupname column.***
 
+
+
+```r
+coastal_fish <- fisheries_tidy2 %>% 
+  select(ISSCAAP_spgroupname, ASFIS_sciname) %>% 
+  filter(ISSCAAP_spgroupname == "Miscellaneous coastal fishes") %>% 
+  pivot_longer(cols = ASFIS_sciname,
+               names_to = "species",
+               values_to= "taxa"
+  )
+```
+
+
+```r
+coastal_fish$taxa <- as.factor(coastal_fish$taxa)
+```
+
+
+```r
+nlevels(coastal_fish$taxa)
+```
+
+```
+## [1] 412
+```
+
+
+Miscellaneous coastal fishes  are comprised of the following `412` species:
+
+```r
+levels(coastal_fish$taxa)
+```
+
+```
+##   [1] "Acanthistius brasilianus"      "Acanthopagrus berda"          
+##   [3] "Acanthopagrus bifasciatus"     "Acanthopagrus latus"          
+##   [5] "Acanthopagrus schlegeli"       "Acanthuridae"                 
+##   [7] "Acanthurus sohal"              "Aethaloperca rogaa"           
+##   [9] "Albula vulpes"                 "Alepisaurus ferox"            
+##  [11] "Ambassidae"                    "Ammodytes personatus"         
+##  [13] "Ammodytes spp"                 "Amphichthys cryptocentrus"    
+##  [15] "Aphareus rutilans"             "Aphia minuta"                 
+##  [17] "Aplodactylus punctatus"        "Apogonidae"                   
+##  [19] "Aprion virescens"              "Apsilus fuscus"               
+##  [21] "Archosargus probatocephalus"   "Archosargus rhomboidalis"     
+##  [23] "Argyrops spinifer"             "Argyrosomus hololepidotus"    
+##  [25] "Argyrosomus regius"            "Argyrozona argyrozona"        
+##  [27] "Ariidae"                       "Arius thalassinus"            
+##  [29] "Arripis georgianus"            "Arripis trutta"               
+##  [31] "Atractoscion aequidens"        "Atractoscion nobilis"         
+##  [33] "Atrobucca nibe"                "Balistes carolinensis"        
+##  [35] "Balistidae"                    "Batrachoididae"               
+##  [37] "Bolbometopon muricatum"        "Boops boops"                  
+##  [39] "Brachydeuterus auritus"        "Caesionidae"                  
+##  [41] "Calamus spp"                   "Cantherhines (=Navodon) spp"  
+##  [43] "Caprodon longimanus"           "Centrolabrus exoletus"        
+##  [45] "Centropomus spp"               "Centropomus undecimalis"      
+##  [47] "Centropristis striata"         "Cephalopholis argus"          
+##  [49] "Cephalopholis boenak"          "Cephalopholis fulva"          
+##  [51] "Cephalopholis hemistiktos"     "Cephalopholis miniata"        
+##  [53] "Chaetodipterus zonatus"        "Cheilinus undulatus"          
+##  [55] "Cheimerius nufar"              "Chelon haematocheilus"        
+##  [57] "Chelon labrosus"               "Chrysoblephus spp"            
+##  [59] "Cilus gilberti"                "Clepticus parrae"             
+##  [61] "Conodon nobilis"               "Coris julis"                  
+##  [63] "Cottidae"                      "Cottoperca gobio"             
+##  [65] "Crenidens crenidens"           "Cromileptes altivelis"        
+##  [67] "Ctenolabrus rupestris"         "Cymatoceps nasutus"           
+##  [69] "Cynoscion acoupa"              "Cynoscion analis"             
+##  [71] "Cynoscion arenarius"           "Cynoscion guatucupa"          
+##  [73] "Cynoscion jamaicensis"         "Cynoscion leiarchus"          
+##  [75] "Cynoscion nebulosus"           "Cynoscion regalis"            
+##  [77] "Cynoscion spp"                 "Cynoscion striatus"           
+##  [79] "Cynoscion virescens"           "Dactylopterus volitans"       
+##  [81] "Dentex angolensis"             "Dentex congoensis"            
+##  [83] "Dentex dentex"                 "Dentex macrophthalmus"        
+##  [85] "Dentex spp"                    "Diagramma pictum"             
+##  [87] "Diapterus auratus"             "Dicentrarchus labrax"         
+##  [89] "Dicentrarchus punctatus"       "Dicentrarchus spp"            
+##  [91] "Diplodus annularis"            "Diplodus argenteus"           
+##  [93] "Diplodus puntazzo"             "Diplodus sargus"              
+##  [95] "Diplodus spp"                  "Diplodus vulgaris"            
+##  [97] "Drepane africana"              "Drepane punctata"             
+##  [99] "Eleginops maclovinus"          "Eleutheronema tetradactylum"  
+## [101] "Elops lacerta"                 "Elops saurus"                 
+## [103] "Ephippidae"                    "Epinephelus adscensionis"     
+## [105] "Epinephelus aeneus"            "Epinephelus analogus"         
+## [107] "Epinephelus areolatus"         "Epinephelus caeruleopunctatus"
+## [109] "Epinephelus caninus"           "Epinephelus chlorostigma"     
+## [111] "Epinephelus coioides"          "Epinephelus drummondhayi"     
+## [113] "Epinephelus fasciatus"         "Epinephelus flavolimbatus"    
+## [115] "Epinephelus fuscoguttatus"     "Epinephelus goreensis"        
+## [117] "Epinephelus guttatus"          "Epinephelus marginatus"       
+## [119] "Epinephelus merra"             "Epinephelus morio"            
+## [121] "Epinephelus morrhua"           "Epinephelus multinotatus"     
+## [123] "Epinephelus mystacinus"        "Epinephelus nigritus"         
+## [125] "Epinephelus niveatus"          "Epinephelus polylepis"        
+## [127] "Epinephelus polyphekadion"     "Epinephelus spp"              
+## [129] "Epinephelus striatus"          "Epinephelus summana"          
+## [131] "Epinephelus tauvina"           "Eptatretus cirrhatus"         
+## [133] "Etelis oculatus"               "Eucinostomus melanopterus"    
+## [135] "Fistularia commersonii"        "Fistularia corneta"           
+## [137] "Fistularia tabacaria"          "Galeichthys feliceps"         
+## [139] "Galeoides decadactylus"        "Genyonemus lineatus"          
+## [141] "Gerreidae"                     "Gerres nigri"                 
+## [143] "Gerres oblongus"               "Gerres oyena"                 
+## [145] "Gerres spp"                    "Girella nigricans"            
+## [147] "Girella tricuspidata"          "Gobiidae"                     
+## [149] "Grammoplites suppositus"       "Gymnocranius spp"             
+## [151] "Haemulidae (=Pomadasyidae)"    "Haemulon album"               
+## [153] "Haemulon plumierii"            "Haemulon spp"                 
+## [155] "Halobatrachus didactylus"      "Harpadon nehereus"            
+## [157] "Hexagrammos decagrammus"       "Holocentridae"                
+## [159] "Hoplopagrus guentherii"        "Hypoptychus dybowskii"        
+## [161] "Isacia conceptionis"           "Isopisthus parvipinnis"       
+## [163] "Joturus pichardi"              "Kyphosidae"                   
+## [165] "Labridae"                      "Labrus bergylta"              
+## [167] "Labrus merula"                 "Lachnolaimus maximus"         
+## [169] "Lagocephalus sceleratus"       "Lagodon rhomboides"           
+## [171] "Larimichthys croceus"          "Larimichthys polyactis"       
+## [173] "Larimus breviceps"             "Lateolabrax japonicus"        
+## [175] "Leiognathidae"                 "Leiognathus spp"              
+## [177] "Leiostomus xanthurus"          "Lepidoperca pulchella"        
+## [179] "Leptomelanosoma indicum"       "Lethrinidae"                  
+## [181] "Lethrinus atlanticus"          "Lethrinus borbonicus"         
+## [183] "Lethrinus harak"               "Lethrinus lentjan"            
+## [185] "Lethrinus mahsena"             "Lethrinus microdon"           
+## [187] "Lethrinus miniatus"            "Lethrinus nebulosus"          
+## [189] "Lethrinus obsoletus"           "Lethrinus xanthochilus"       
+## [191] "Lithognathus lithognathus"     "Lithognathus mormyrus"        
+## [193] "Lithognathus spp"              "Liza aurata"                  
+## [195] "Liza klunzingeri"              "Liza saliens"                 
+## [197] "Lutjanidae"                    "Lutjanus analis"              
+## [199] "Lutjanus argentimaculatus"     "Lutjanus argentiventris"      
+## [201] "Lutjanus bohar"                "Lutjanus buccanella"          
+## [203] "Lutjanus campechanus"          "Lutjanus cyanopterus"         
+## [205] "Lutjanus gibbus"               "Lutjanus griseus"             
+## [207] "Lutjanus guttatus"             "Lutjanus johnii"              
+## [209] "Lutjanus kasmira"              "Lutjanus malabaricus"         
+## [211] "Lutjanus peru"                 "Lutjanus purpureus"           
+## [213] "Lutjanus quinquelineatus"      "Lutjanus spp"                 
+## [215] "Lutjanus synagris"             "Lutjanus vitta"               
+## [217] "Lutjanus vivanus"              "Macrodon ancylodon"           
+## [219] "Macrozoarces americanus"       "Malacanthus plumieri"         
+## [221] "Megalops atlanticus"           "Megalops cyprinoides"         
+## [223] "Mene maculata"                 "Menticirrhus americanus"      
+## [225] "Menticirrhus littoralis"       "Menticirrhus saxatilis"       
+## [227] "Menticirrhus spp"              "Mesogobius batrachocephalus"  
+## [229] "Micropogonias furnieri"        "Micropogonias spp"            
+## [231] "Micropogonias undulatus"       "Miichthys miiuy"              
+## [233] "Monacanthidae"                 "Monotaxis grandoculis"        
+## [235] "Mugil cephalus"                "Mugil curema"                 
+## [237] "Mugil incilis"                 "Mugil liza"                   
+## [239] "Mugil soiuy"                   "Mugilidae"                    
+## [241] "Mullidae"                      "Mulloidichthys flavolineatus" 
+## [243] "Mullus argentinae"             "Mullus barbatus"              
+## [245] "Mullus spp"                    "Mullus surmuletus"            
+## [247] "Muraena helena"                "Muraenidae"                   
+## [249] "Mycteroperca bonaci"           "Mycteroperca microlepis"      
+## [251] "Mycteroperca phenax"           "Mycteroperca spp"             
+## [253] "Mycteroperca venenosa"         "Mycteroperca xenarcha"        
+## [255] "Myoxocephalus scorpius"        "Myoxocephalus spp"            
+## [257] "Myxinidae"                     "Naso unicornis"               
+## [259] "Nemipteridae"                  "Nemipterus japonicus"         
+## [261] "Nemipterus randalli"           "Nemipterus spp"               
+## [263] "Nemipterus virgatus"           "Nibea mitsukurii"             
+## [265] "Normanichthys crockeri"        "Notothenia acuta"             
+## [267] "Notothenia coriiceps"          "Notothenia gibberifrons"      
+## [269] "Notothenia kempi"              "Notothenia neglecta"          
+## [271] "Notothenia rossii"             "Notothenia squamifrons"       
+## [273] "Nototheniidae"                 "Nototheniops larseni"         
+## [275] "Nototheniops mizops"           "Nototheniops nudifrons"       
+## [277] "Nototheniops nybelini"         "Oblada melanura"              
+## [279] "Ocyurus chrysurus"             "Ophichthidae"                 
+## [281] "Ophiodon elongatus"            "Orthopristis chrysoptera"     
+## [283] "Ostraciidae"                   "Otolithes ruber"              
+## [285] "Pagellus acarne"               "Pagellus bellottii"           
+## [287] "Pagellus bogaraveo"            "Pagellus erythrinus"          
+## [289] "Pagellus spp"                  "Pagothenia hansoni"           
+## [291] "Pagrus auratus"                "Pagrus caeruleostictus"       
+## [293] "Pagrus pagrus"                 "Pagrus spp"                   
+## [295] "Paralabrax humeralis"          "Paralabrax spp"               
+## [297] "Paralonchurus peruanus"        "Parapercis colias"            
+## [299] "Parapristipoma octolineatum"   "Parika scaber"                
+## [301] "Pelates quadrilineatus"        "Pennahia anea"                
+## [303] "Pennahia argentata"            "Pentanemus quinquarius"       
+## [305] "Percoidei"                     "Percophis brasiliensis"       
+## [307] "Petrus rupestris"              "Pinguipes brasilianus"        
+## [309] "Pinguipes chilensis"           "Platax spp"                   
+## [311] "Platycephalidae"               "Platycephalus indicus"        
+## [313] "Plectorhinchus gaterinus"      "Plectorhinchus macrolepis"    
+## [315] "Plectorhinchus mediterraneus"  "Plectorhinchus pictus"        
+## [317] "Plectorhinchus schotaf"        "Plectorhinchus sordidus"      
+## [319] "Plectorhinchus spp"            "Plectropomus areolatus"       
+## [321] "Plectropomus leopardus"        "Plectropomus pessuliferus"    
+## [323] "Pleuragramma antarcticum"      "Pleurogrammus azonus"         
+## [325] "Pleurogrammus monopterygius"   "Plotosus spp"                 
+## [327] "Pogonias cromis"               "Polydactylus quadrifilis"     
+## [329] "Polynemidae"                   "Pomacanthidae"                
+## [331] "Pomacanthus maculosus"         "Pomadasys argenteus"          
+## [333] "Pomadasys incisus"             "Pomadasys jubelini"           
+## [335] "Pomadasys kaakan"              "Pomadasys stridens"           
+## [337] "Pomatoschistus microps"        "Priacanthus macracanthus"     
+## [339] "Priacanthus spp"               "Pristipomoides spp"           
+## [341] "Prolatilus jugularis"          "Protemblemaria bicirris"      
+## [343] "Pseudopercis semifasciata"     "Pseudotolithus elongatus"     
+## [345] "Pseudotolithus senegalensis"   "Pseudotolithus senegallus"    
+## [347] "Pseudotolithus spp"            "Pseudupeneus prayensis"       
+## [349] "Pterogymnus laniarius"         "Pteroscion peli"              
+## [351] "Pterothrissus belloci"         "Rhabdosargus globiceps"       
+## [353] "Rhabdosargus haffara"          "Rhomboplites aurorubens"      
+## [355] "Sargocentron spiniferum"       "Sarpa salpa"                  
+## [357] "Saurida tumbil"                "Saurida undosquamis"          
+## [359] "Scaridae"                      "Scarus ghobban"               
+## [361] "Scarus persicus"               "Scatophagus spp"              
+## [363] "Sciaena umbra"                 "Sciaenidae"                   
+## [365] "Sciaenops ocellatus"           "Scolopsis spp"                
+## [367] "Scolopsis taeniata"            "Scorpaenichthys marmoratus"   
+## [369] "Semicossyphus pulcher"         "Serranidae"                   
+## [371] "Serranus atricauda"            "Serranus cabrilla"            
+## [373] "Serranus scriba"               "Serranus spp"                 
+## [375] "Siganus spp"                   "Sillaginidae"                 
+## [377] "Sillago sihama"                "Sparidae"                     
+## [379] "Sparidentex hasta"             "Sparisoma cretense"           
+## [381] "Sparus aurata"                 "Sphoeroides maculatus"        
+## [383] "Sphoeroides spp"               "Spicara maena"                
+## [385] "Spicara smaris"                "Spicara spp"                  
+## [387] "Spondyliosoma cantharus"       "Stenotomus chrysops"          
+## [389] "Stephanolepis cirrhifer"       "Stereolepis gigas"            
+## [391] "Symphodus melops"              "Synodontidae"                 
+## [393] "Synodus saurus"                "Tautoga onitis"               
+## [395] "Tautogolabrus adspersus"       "Terapon spp"                  
+## [397] "Tetraodontidae"                "Totoaba macdonaldi"           
+## [399] "Trachinidae"                   "Trachinus draco"              
+## [401] "Trachinus spp"                 "Tragulichthys jaculiferus"    
+## [403] "Trematomus eulepidotus"        "Trematomus spp"               
+## [405] "Umbrina canariensis"           "Umbrina canosai"              
+## [407] "Umbrina cirrosa"               "Upeneus spp"                  
+## [409] "Valamugil seheli"              "Variola louti"                
+## [411] "Xyrichtys novacula"            "Zoarces viviparus"
+```
+
+
 <br>
 ***17. Use the data to do at least one exploratory analysis of your choice. What can you learn?***
+
+Following the Fukishima nuclear diseaser in Japan did fishing levels immediately drop? -- Since data only goes until 2012, I will compare 2012 levels to 2011 and 2010 levels.
+
+
+```r
+fisheries_tidy2 %>% 
+  select(country, year, ASFIS_sciname, catch_tonnes) %>% 
+  filter(country=="Japan") %>% 
+  filter(year <=2012, year>=2010) %>% 
+  group_by(year) %>% 
+  summarize(
+    total_catch_japan = sum(catch_tonnes, na.rm=TRUE)
+  )
+```
+
+```
+## # A tibble: 3 x 2
+##    year total_catch_japan
+##   <dbl>             <dbl>
+## 1  2010           3996016
+## 2  2011           3714832
+## 3  2012            531113
+```
+
+Wow! The fishing industry seems to have been really affected by the nucelear diseaser.
+
 
 
 <br><br><br>

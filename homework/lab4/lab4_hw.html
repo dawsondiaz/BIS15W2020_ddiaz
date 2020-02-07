@@ -844,7 +844,7 @@ nlevels(fisheries$Country)</code></pre>
 <p><strong><em>12. Which country had the largest overall catch in the year 2000?</em></strong></p>
 <pre class="r"><code>global_total_catch_2000 &lt;- fisheries_tidy2 %&gt;% 
   group_by(country) %&gt;%
-  filter(year==&quot;2000&quot;) %&gt;% 
+  filter(year==2000) %&gt;% 
   summarize (
     total_catch = sum(catch_tonnes, na.rm=TRUE) 
   ) %&gt;% 
@@ -862,10 +862,326 @@ nlevels(fisheries$Country)</code></pre>
 <p>In 2000, Peru was the country with the largest total catch (in tonnes).</p>
 <p><br></p>
 <p><strong><em>13. Which country caught the most sardines (<em>Sardina</em>) between the years 1990-2000?</em></strong></p>
+<pre class="r"><code>fisheries_tidy2$year &lt;- as.numeric(fisheries_tidy2$year)
+fisheries_tidy2$ASFIS_sciname &lt;- as.character(fisheries_tidy2$ASFIS_sciname)</code></pre>
+<pre class="r"><code>sardine_total &lt;- fisheries_tidy2 %&gt;% 
+  select(year, ASFIS_sciname, ISSCAAP_spgroupname, country, catch_tonnes) %&gt;%
+  filter(year &gt;=1990, year&lt;=2000, ASFIS_sciname==&quot;Sardina pilchardus&quot;) %&gt;% 
+  group_by(country) %&gt;% 
+  summarize(sardina_catch_tonnes = sum(catch_tonnes, na.rm=TRUE)) %&gt;% 
+  arrange(desc(sardina_catch_tonnes))</code></pre>
+<pre class="r"><code>head(sardine_total)</code></pre>
+<pre><code>## # A tibble: 6 x 2
+##   country            sardina_catch_tonnes
+##   &lt;fct&gt;                             &lt;dbl&gt;
+## 1 Morocco                         4785190
+## 2 Spain                           1425317
+## 3 Russian Federation              1035139
+## 4 Portugal                         926318
+## 5 Ukraine                          784730
+## 6 Italy                            377907</code></pre>
+<p>Between 1990 and 2000, Morocco caught the most Sardina pilchardus with 4785190 tonnes caught.</p>
 <p><br> <strong><em>14. Which five countries caught the most cephalopods between 2008-2012?</em></strong></p>
+<pre class="r"><code> cephalopod_total &lt;- fisheries_tidy2 %&gt;% 
+  select(country, year, ISSCAAP_spgroupname, catch_tonnes) %&gt;% 
+  filter(ISSCAAP_spgroupname == &quot;Squids, cuttlefishes, octopuses&quot;) %&gt;% 
+  filter(year &gt;=2008, year &lt;=2012) %&gt;% 
+  group_by(country) %&gt;% 
+  summarize(cephalopod_catch_tonnes = sum(catch_tonnes, na.rm=TRUE)) %&gt;% 
+  arrange(desc(cephalopod_catch_tonnes))</code></pre>
+<pre class="r"><code>head(cephalopod_total)</code></pre>
+<pre><code>## # A tibble: 6 x 2
+##   country            cephalopod_catch_tonnes
+##   &lt;fct&gt;                                &lt;dbl&gt;
+## 1 China                              4785139
+## 2 Peru                               2274232
+## 3 Korea, Republic of                 1535454
+## 4 Japan                              1394041
+## 5 Chile                               723186
+## 6 Indonesia                           684567</code></pre>
+<p>Between 2008 and 2012, China caught the most cepalopods with 4785139 tonnes caught.</p>
 <p><br> <strong><em>15. Given the top five countries from question 12 above, which species was the highest catch total? The lowest?</em></strong></p>
+<p>The top five countries with the highest global catch in 2000 are: Peru, Japan, The United States, Chile, and Indonesia.</p>
+<pre class="r"><code>top5 &lt;- c(&quot;Peru&quot;, &quot;Japan&quot;,&quot;United States of America&quot;, &quot;Chile&quot;, &quot;Indonesia&quot;)</code></pre>
+<pre class="r"><code>top5_catch &lt;- fisheries_tidy2 %&gt;% 
+  select(country, year, ASFIS_sciname, catch_tonnes) %&gt;% 
+  filter(year==2000) %&gt;% 
+  filter(country %in% top5) %&gt;% 
+  group_by(ASFIS_sciname) %&gt;% 
+  summarize(
+    catch_tonnes = max(catch_tonnes, na.rm=TRUE)
+  ) %&gt;% 
+  arrange(desc(catch_tonnes))</code></pre>
+<p>Among the top 5 countries with the highest catch in 2000, <code>Engraulis ringens</code> was the most caught fish.</p>
+<pre class="r"><code>top_n(top5_catch, 5, catch_tonnes)</code></pre>
+<pre><code>## # A tibble: 5 x 2
+##   ASFIS_sciname         catch_tonnes
+##   &lt;chr&gt;                        &lt;dbl&gt;
+## 1 Engraulis ringens          9575717
+## 2 Trachurus murphyi          1234299
+## 3 Theragra chalcogramma      1182438
+## 4 Strangomera bentincki       722522
+## 5 Brevoortia patronus         591434</code></pre>
+<pre class="r"><code>top_n(top5_catch,-19, catch_tonnes)</code></pre>
+<pre><code>## # A tibble: 19 x 2
+##    ASFIS_sciname              catch_tonnes
+##    &lt;chr&gt;                             &lt;dbl&gt;
+##  1 Brotula barbata                       1
+##  2 Carcharias taurus                     1
+##  3 Carcharodon carcharias                1
+##  4 Caulolatilus microps                  1
+##  5 Lobotes surinamensis                  1
+##  6 Pleuronichthys decurrens              1
+##  7 Tawera gayi                           1
+##  8 Tresus spp                            1
+##  9 Ammodytes spp                      -Inf
+## 10 Asteroidea                         -Inf
+## 11 Carcharhinus falciformis           -Inf
+## 12 Carcharhinus leucas                -Inf
+## 13 Euthynnus lineatus                 -Inf
+## 14 Ginglymostoma cirratum             -Inf
+## 15 Lachnolaimus maximus               -Inf
+## 16 Microgadus proximus                -Inf
+## 17 Orthopristis chrysoptera           -Inf
+## 18 Osmerus mordax                     -Inf
+## 19 Rhizoprionodon terraenovae         -Inf</code></pre>
+<p>Among the top 5 countries with the highest catch in 2000, <code>Tresus spp</code>, <code>Tawera gayi</code>, <code>Pleuronichthys decurrens</code>, <code>Lobotes surinamensis</code>, <code>Caulolatilus microps</code>, <code>Carcharodon carcharias</code> <code>Carcharias taurus</code> and <code>Brotula barbata</code> were all tied for the least caught.</p>
 <p><br> <strong><em>16. In some cases, the taxonomy of the fish being caught is unclear. Make a new data frame called <code>coastal_fish</code> that shows the taxonomic composition of “Miscellaneous coastal fishes” within the ISSCAAP_spgroupname column.</em></strong></p>
+<pre class="r"><code>coastal_fish &lt;- fisheries_tidy2 %&gt;% 
+  select(ISSCAAP_spgroupname, ASFIS_sciname) %&gt;% 
+  filter(ISSCAAP_spgroupname == &quot;Miscellaneous coastal fishes&quot;) %&gt;% 
+  pivot_longer(cols = ASFIS_sciname,
+               names_to = &quot;species&quot;,
+               values_to= &quot;taxa&quot;
+  )</code></pre>
+<pre class="r"><code>coastal_fish$taxa &lt;- as.factor(coastal_fish$taxa)</code></pre>
+<pre class="r"><code>nlevels(coastal_fish$taxa)</code></pre>
+<pre><code>## [1] 412</code></pre>
+<p>Miscellaneous coastal fishes are comprised of the following <code>412</code> species:</p>
+<pre class="r"><code>levels(coastal_fish$taxa)</code></pre>
+<pre><code>##   [1] &quot;Acanthistius brasilianus&quot;      &quot;Acanthopagrus berda&quot;          
+##   [3] &quot;Acanthopagrus bifasciatus&quot;     &quot;Acanthopagrus latus&quot;          
+##   [5] &quot;Acanthopagrus schlegeli&quot;       &quot;Acanthuridae&quot;                 
+##   [7] &quot;Acanthurus sohal&quot;              &quot;Aethaloperca rogaa&quot;           
+##   [9] &quot;Albula vulpes&quot;                 &quot;Alepisaurus ferox&quot;            
+##  [11] &quot;Ambassidae&quot;                    &quot;Ammodytes personatus&quot;         
+##  [13] &quot;Ammodytes spp&quot;                 &quot;Amphichthys cryptocentrus&quot;    
+##  [15] &quot;Aphareus rutilans&quot;             &quot;Aphia minuta&quot;                 
+##  [17] &quot;Aplodactylus punctatus&quot;        &quot;Apogonidae&quot;                   
+##  [19] &quot;Aprion virescens&quot;              &quot;Apsilus fuscus&quot;               
+##  [21] &quot;Archosargus probatocephalus&quot;   &quot;Archosargus rhomboidalis&quot;     
+##  [23] &quot;Argyrops spinifer&quot;             &quot;Argyrosomus hololepidotus&quot;    
+##  [25] &quot;Argyrosomus regius&quot;            &quot;Argyrozona argyrozona&quot;        
+##  [27] &quot;Ariidae&quot;                       &quot;Arius thalassinus&quot;            
+##  [29] &quot;Arripis georgianus&quot;            &quot;Arripis trutta&quot;               
+##  [31] &quot;Atractoscion aequidens&quot;        &quot;Atractoscion nobilis&quot;         
+##  [33] &quot;Atrobucca nibe&quot;                &quot;Balistes carolinensis&quot;        
+##  [35] &quot;Balistidae&quot;                    &quot;Batrachoididae&quot;               
+##  [37] &quot;Bolbometopon muricatum&quot;        &quot;Boops boops&quot;                  
+##  [39] &quot;Brachydeuterus auritus&quot;        &quot;Caesionidae&quot;                  
+##  [41] &quot;Calamus spp&quot;                   &quot;Cantherhines (=Navodon) spp&quot;  
+##  [43] &quot;Caprodon longimanus&quot;           &quot;Centrolabrus exoletus&quot;        
+##  [45] &quot;Centropomus spp&quot;               &quot;Centropomus undecimalis&quot;      
+##  [47] &quot;Centropristis striata&quot;         &quot;Cephalopholis argus&quot;          
+##  [49] &quot;Cephalopholis boenak&quot;          &quot;Cephalopholis fulva&quot;          
+##  [51] &quot;Cephalopholis hemistiktos&quot;     &quot;Cephalopholis miniata&quot;        
+##  [53] &quot;Chaetodipterus zonatus&quot;        &quot;Cheilinus undulatus&quot;          
+##  [55] &quot;Cheimerius nufar&quot;              &quot;Chelon haematocheilus&quot;        
+##  [57] &quot;Chelon labrosus&quot;               &quot;Chrysoblephus spp&quot;            
+##  [59] &quot;Cilus gilberti&quot;                &quot;Clepticus parrae&quot;             
+##  [61] &quot;Conodon nobilis&quot;               &quot;Coris julis&quot;                  
+##  [63] &quot;Cottidae&quot;                      &quot;Cottoperca gobio&quot;             
+##  [65] &quot;Crenidens crenidens&quot;           &quot;Cromileptes altivelis&quot;        
+##  [67] &quot;Ctenolabrus rupestris&quot;         &quot;Cymatoceps nasutus&quot;           
+##  [69] &quot;Cynoscion acoupa&quot;              &quot;Cynoscion analis&quot;             
+##  [71] &quot;Cynoscion arenarius&quot;           &quot;Cynoscion guatucupa&quot;          
+##  [73] &quot;Cynoscion jamaicensis&quot;         &quot;Cynoscion leiarchus&quot;          
+##  [75] &quot;Cynoscion nebulosus&quot;           &quot;Cynoscion regalis&quot;            
+##  [77] &quot;Cynoscion spp&quot;                 &quot;Cynoscion striatus&quot;           
+##  [79] &quot;Cynoscion virescens&quot;           &quot;Dactylopterus volitans&quot;       
+##  [81] &quot;Dentex angolensis&quot;             &quot;Dentex congoensis&quot;            
+##  [83] &quot;Dentex dentex&quot;                 &quot;Dentex macrophthalmus&quot;        
+##  [85] &quot;Dentex spp&quot;                    &quot;Diagramma pictum&quot;             
+##  [87] &quot;Diapterus auratus&quot;             &quot;Dicentrarchus labrax&quot;         
+##  [89] &quot;Dicentrarchus punctatus&quot;       &quot;Dicentrarchus spp&quot;            
+##  [91] &quot;Diplodus annularis&quot;            &quot;Diplodus argenteus&quot;           
+##  [93] &quot;Diplodus puntazzo&quot;             &quot;Diplodus sargus&quot;              
+##  [95] &quot;Diplodus spp&quot;                  &quot;Diplodus vulgaris&quot;            
+##  [97] &quot;Drepane africana&quot;              &quot;Drepane punctata&quot;             
+##  [99] &quot;Eleginops maclovinus&quot;          &quot;Eleutheronema tetradactylum&quot;  
+## [101] &quot;Elops lacerta&quot;                 &quot;Elops saurus&quot;                 
+## [103] &quot;Ephippidae&quot;                    &quot;Epinephelus adscensionis&quot;     
+## [105] &quot;Epinephelus aeneus&quot;            &quot;Epinephelus analogus&quot;         
+## [107] &quot;Epinephelus areolatus&quot;         &quot;Epinephelus caeruleopunctatus&quot;
+## [109] &quot;Epinephelus caninus&quot;           &quot;Epinephelus chlorostigma&quot;     
+## [111] &quot;Epinephelus coioides&quot;          &quot;Epinephelus drummondhayi&quot;     
+## [113] &quot;Epinephelus fasciatus&quot;         &quot;Epinephelus flavolimbatus&quot;    
+## [115] &quot;Epinephelus fuscoguttatus&quot;     &quot;Epinephelus goreensis&quot;        
+## [117] &quot;Epinephelus guttatus&quot;          &quot;Epinephelus marginatus&quot;       
+## [119] &quot;Epinephelus merra&quot;             &quot;Epinephelus morio&quot;            
+## [121] &quot;Epinephelus morrhua&quot;           &quot;Epinephelus multinotatus&quot;     
+## [123] &quot;Epinephelus mystacinus&quot;        &quot;Epinephelus nigritus&quot;         
+## [125] &quot;Epinephelus niveatus&quot;          &quot;Epinephelus polylepis&quot;        
+## [127] &quot;Epinephelus polyphekadion&quot;     &quot;Epinephelus spp&quot;              
+## [129] &quot;Epinephelus striatus&quot;          &quot;Epinephelus summana&quot;          
+## [131] &quot;Epinephelus tauvina&quot;           &quot;Eptatretus cirrhatus&quot;         
+## [133] &quot;Etelis oculatus&quot;               &quot;Eucinostomus melanopterus&quot;    
+## [135] &quot;Fistularia commersonii&quot;        &quot;Fistularia corneta&quot;           
+## [137] &quot;Fistularia tabacaria&quot;          &quot;Galeichthys feliceps&quot;         
+## [139] &quot;Galeoides decadactylus&quot;        &quot;Genyonemus lineatus&quot;          
+## [141] &quot;Gerreidae&quot;                     &quot;Gerres nigri&quot;                 
+## [143] &quot;Gerres oblongus&quot;               &quot;Gerres oyena&quot;                 
+## [145] &quot;Gerres spp&quot;                    &quot;Girella nigricans&quot;            
+## [147] &quot;Girella tricuspidata&quot;          &quot;Gobiidae&quot;                     
+## [149] &quot;Grammoplites suppositus&quot;       &quot;Gymnocranius spp&quot;             
+## [151] &quot;Haemulidae (=Pomadasyidae)&quot;    &quot;Haemulon album&quot;               
+## [153] &quot;Haemulon plumierii&quot;            &quot;Haemulon spp&quot;                 
+## [155] &quot;Halobatrachus didactylus&quot;      &quot;Harpadon nehereus&quot;            
+## [157] &quot;Hexagrammos decagrammus&quot;       &quot;Holocentridae&quot;                
+## [159] &quot;Hoplopagrus guentherii&quot;        &quot;Hypoptychus dybowskii&quot;        
+## [161] &quot;Isacia conceptionis&quot;           &quot;Isopisthus parvipinnis&quot;       
+## [163] &quot;Joturus pichardi&quot;              &quot;Kyphosidae&quot;                   
+## [165] &quot;Labridae&quot;                      &quot;Labrus bergylta&quot;              
+## [167] &quot;Labrus merula&quot;                 &quot;Lachnolaimus maximus&quot;         
+## [169] &quot;Lagocephalus sceleratus&quot;       &quot;Lagodon rhomboides&quot;           
+## [171] &quot;Larimichthys croceus&quot;          &quot;Larimichthys polyactis&quot;       
+## [173] &quot;Larimus breviceps&quot;             &quot;Lateolabrax japonicus&quot;        
+## [175] &quot;Leiognathidae&quot;                 &quot;Leiognathus spp&quot;              
+## [177] &quot;Leiostomus xanthurus&quot;          &quot;Lepidoperca pulchella&quot;        
+## [179] &quot;Leptomelanosoma indicum&quot;       &quot;Lethrinidae&quot;                  
+## [181] &quot;Lethrinus atlanticus&quot;          &quot;Lethrinus borbonicus&quot;         
+## [183] &quot;Lethrinus harak&quot;               &quot;Lethrinus lentjan&quot;            
+## [185] &quot;Lethrinus mahsena&quot;             &quot;Lethrinus microdon&quot;           
+## [187] &quot;Lethrinus miniatus&quot;            &quot;Lethrinus nebulosus&quot;          
+## [189] &quot;Lethrinus obsoletus&quot;           &quot;Lethrinus xanthochilus&quot;       
+## [191] &quot;Lithognathus lithognathus&quot;     &quot;Lithognathus mormyrus&quot;        
+## [193] &quot;Lithognathus spp&quot;              &quot;Liza aurata&quot;                  
+## [195] &quot;Liza klunzingeri&quot;              &quot;Liza saliens&quot;                 
+## [197] &quot;Lutjanidae&quot;                    &quot;Lutjanus analis&quot;              
+## [199] &quot;Lutjanus argentimaculatus&quot;     &quot;Lutjanus argentiventris&quot;      
+## [201] &quot;Lutjanus bohar&quot;                &quot;Lutjanus buccanella&quot;          
+## [203] &quot;Lutjanus campechanus&quot;          &quot;Lutjanus cyanopterus&quot;         
+## [205] &quot;Lutjanus gibbus&quot;               &quot;Lutjanus griseus&quot;             
+## [207] &quot;Lutjanus guttatus&quot;             &quot;Lutjanus johnii&quot;              
+## [209] &quot;Lutjanus kasmira&quot;              &quot;Lutjanus malabaricus&quot;         
+## [211] &quot;Lutjanus peru&quot;                 &quot;Lutjanus purpureus&quot;           
+## [213] &quot;Lutjanus quinquelineatus&quot;      &quot;Lutjanus spp&quot;                 
+## [215] &quot;Lutjanus synagris&quot;             &quot;Lutjanus vitta&quot;               
+## [217] &quot;Lutjanus vivanus&quot;              &quot;Macrodon ancylodon&quot;           
+## [219] &quot;Macrozoarces americanus&quot;       &quot;Malacanthus plumieri&quot;         
+## [221] &quot;Megalops atlanticus&quot;           &quot;Megalops cyprinoides&quot;         
+## [223] &quot;Mene maculata&quot;                 &quot;Menticirrhus americanus&quot;      
+## [225] &quot;Menticirrhus littoralis&quot;       &quot;Menticirrhus saxatilis&quot;       
+## [227] &quot;Menticirrhus spp&quot;              &quot;Mesogobius batrachocephalus&quot;  
+## [229] &quot;Micropogonias furnieri&quot;        &quot;Micropogonias spp&quot;            
+## [231] &quot;Micropogonias undulatus&quot;       &quot;Miichthys miiuy&quot;              
+## [233] &quot;Monacanthidae&quot;                 &quot;Monotaxis grandoculis&quot;        
+## [235] &quot;Mugil cephalus&quot;                &quot;Mugil curema&quot;                 
+## [237] &quot;Mugil incilis&quot;                 &quot;Mugil liza&quot;                   
+## [239] &quot;Mugil soiuy&quot;                   &quot;Mugilidae&quot;                    
+## [241] &quot;Mullidae&quot;                      &quot;Mulloidichthys flavolineatus&quot; 
+## [243] &quot;Mullus argentinae&quot;             &quot;Mullus barbatus&quot;              
+## [245] &quot;Mullus spp&quot;                    &quot;Mullus surmuletus&quot;            
+## [247] &quot;Muraena helena&quot;                &quot;Muraenidae&quot;                   
+## [249] &quot;Mycteroperca bonaci&quot;           &quot;Mycteroperca microlepis&quot;      
+## [251] &quot;Mycteroperca phenax&quot;           &quot;Mycteroperca spp&quot;             
+## [253] &quot;Mycteroperca venenosa&quot;         &quot;Mycteroperca xenarcha&quot;        
+## [255] &quot;Myoxocephalus scorpius&quot;        &quot;Myoxocephalus spp&quot;            
+## [257] &quot;Myxinidae&quot;                     &quot;Naso unicornis&quot;               
+## [259] &quot;Nemipteridae&quot;                  &quot;Nemipterus japonicus&quot;         
+## [261] &quot;Nemipterus randalli&quot;           &quot;Nemipterus spp&quot;               
+## [263] &quot;Nemipterus virgatus&quot;           &quot;Nibea mitsukurii&quot;             
+## [265] &quot;Normanichthys crockeri&quot;        &quot;Notothenia acuta&quot;             
+## [267] &quot;Notothenia coriiceps&quot;          &quot;Notothenia gibberifrons&quot;      
+## [269] &quot;Notothenia kempi&quot;              &quot;Notothenia neglecta&quot;          
+## [271] &quot;Notothenia rossii&quot;             &quot;Notothenia squamifrons&quot;       
+## [273] &quot;Nototheniidae&quot;                 &quot;Nototheniops larseni&quot;         
+## [275] &quot;Nototheniops mizops&quot;           &quot;Nototheniops nudifrons&quot;       
+## [277] &quot;Nototheniops nybelini&quot;         &quot;Oblada melanura&quot;              
+## [279] &quot;Ocyurus chrysurus&quot;             &quot;Ophichthidae&quot;                 
+## [281] &quot;Ophiodon elongatus&quot;            &quot;Orthopristis chrysoptera&quot;     
+## [283] &quot;Ostraciidae&quot;                   &quot;Otolithes ruber&quot;              
+## [285] &quot;Pagellus acarne&quot;               &quot;Pagellus bellottii&quot;           
+## [287] &quot;Pagellus bogaraveo&quot;            &quot;Pagellus erythrinus&quot;          
+## [289] &quot;Pagellus spp&quot;                  &quot;Pagothenia hansoni&quot;           
+## [291] &quot;Pagrus auratus&quot;                &quot;Pagrus caeruleostictus&quot;       
+## [293] &quot;Pagrus pagrus&quot;                 &quot;Pagrus spp&quot;                   
+## [295] &quot;Paralabrax humeralis&quot;          &quot;Paralabrax spp&quot;               
+## [297] &quot;Paralonchurus peruanus&quot;        &quot;Parapercis colias&quot;            
+## [299] &quot;Parapristipoma octolineatum&quot;   &quot;Parika scaber&quot;                
+## [301] &quot;Pelates quadrilineatus&quot;        &quot;Pennahia anea&quot;                
+## [303] &quot;Pennahia argentata&quot;            &quot;Pentanemus quinquarius&quot;       
+## [305] &quot;Percoidei&quot;                     &quot;Percophis brasiliensis&quot;       
+## [307] &quot;Petrus rupestris&quot;              &quot;Pinguipes brasilianus&quot;        
+## [309] &quot;Pinguipes chilensis&quot;           &quot;Platax spp&quot;                   
+## [311] &quot;Platycephalidae&quot;               &quot;Platycephalus indicus&quot;        
+## [313] &quot;Plectorhinchus gaterinus&quot;      &quot;Plectorhinchus macrolepis&quot;    
+## [315] &quot;Plectorhinchus mediterraneus&quot;  &quot;Plectorhinchus pictus&quot;        
+## [317] &quot;Plectorhinchus schotaf&quot;        &quot;Plectorhinchus sordidus&quot;      
+## [319] &quot;Plectorhinchus spp&quot;            &quot;Plectropomus areolatus&quot;       
+## [321] &quot;Plectropomus leopardus&quot;        &quot;Plectropomus pessuliferus&quot;    
+## [323] &quot;Pleuragramma antarcticum&quot;      &quot;Pleurogrammus azonus&quot;         
+## [325] &quot;Pleurogrammus monopterygius&quot;   &quot;Plotosus spp&quot;                 
+## [327] &quot;Pogonias cromis&quot;               &quot;Polydactylus quadrifilis&quot;     
+## [329] &quot;Polynemidae&quot;                   &quot;Pomacanthidae&quot;                
+## [331] &quot;Pomacanthus maculosus&quot;         &quot;Pomadasys argenteus&quot;          
+## [333] &quot;Pomadasys incisus&quot;             &quot;Pomadasys jubelini&quot;           
+## [335] &quot;Pomadasys kaakan&quot;              &quot;Pomadasys stridens&quot;           
+## [337] &quot;Pomatoschistus microps&quot;        &quot;Priacanthus macracanthus&quot;     
+## [339] &quot;Priacanthus spp&quot;               &quot;Pristipomoides spp&quot;           
+## [341] &quot;Prolatilus jugularis&quot;          &quot;Protemblemaria bicirris&quot;      
+## [343] &quot;Pseudopercis semifasciata&quot;     &quot;Pseudotolithus elongatus&quot;     
+## [345] &quot;Pseudotolithus senegalensis&quot;   &quot;Pseudotolithus senegallus&quot;    
+## [347] &quot;Pseudotolithus spp&quot;            &quot;Pseudupeneus prayensis&quot;       
+## [349] &quot;Pterogymnus laniarius&quot;         &quot;Pteroscion peli&quot;              
+## [351] &quot;Pterothrissus belloci&quot;         &quot;Rhabdosargus globiceps&quot;       
+## [353] &quot;Rhabdosargus haffara&quot;          &quot;Rhomboplites aurorubens&quot;      
+## [355] &quot;Sargocentron spiniferum&quot;       &quot;Sarpa salpa&quot;                  
+## [357] &quot;Saurida tumbil&quot;                &quot;Saurida undosquamis&quot;          
+## [359] &quot;Scaridae&quot;                      &quot;Scarus ghobban&quot;               
+## [361] &quot;Scarus persicus&quot;               &quot;Scatophagus spp&quot;              
+## [363] &quot;Sciaena umbra&quot;                 &quot;Sciaenidae&quot;                   
+## [365] &quot;Sciaenops ocellatus&quot;           &quot;Scolopsis spp&quot;                
+## [367] &quot;Scolopsis taeniata&quot;            &quot;Scorpaenichthys marmoratus&quot;   
+## [369] &quot;Semicossyphus pulcher&quot;         &quot;Serranidae&quot;                   
+## [371] &quot;Serranus atricauda&quot;            &quot;Serranus cabrilla&quot;            
+## [373] &quot;Serranus scriba&quot;               &quot;Serranus spp&quot;                 
+## [375] &quot;Siganus spp&quot;                   &quot;Sillaginidae&quot;                 
+## [377] &quot;Sillago sihama&quot;                &quot;Sparidae&quot;                     
+## [379] &quot;Sparidentex hasta&quot;             &quot;Sparisoma cretense&quot;           
+## [381] &quot;Sparus aurata&quot;                 &quot;Sphoeroides maculatus&quot;        
+## [383] &quot;Sphoeroides spp&quot;               &quot;Spicara maena&quot;                
+## [385] &quot;Spicara smaris&quot;                &quot;Spicara spp&quot;                  
+## [387] &quot;Spondyliosoma cantharus&quot;       &quot;Stenotomus chrysops&quot;          
+## [389] &quot;Stephanolepis cirrhifer&quot;       &quot;Stereolepis gigas&quot;            
+## [391] &quot;Symphodus melops&quot;              &quot;Synodontidae&quot;                 
+## [393] &quot;Synodus saurus&quot;                &quot;Tautoga onitis&quot;               
+## [395] &quot;Tautogolabrus adspersus&quot;       &quot;Terapon spp&quot;                  
+## [397] &quot;Tetraodontidae&quot;                &quot;Totoaba macdonaldi&quot;           
+## [399] &quot;Trachinidae&quot;                   &quot;Trachinus draco&quot;              
+## [401] &quot;Trachinus spp&quot;                 &quot;Tragulichthys jaculiferus&quot;    
+## [403] &quot;Trematomus eulepidotus&quot;        &quot;Trematomus spp&quot;               
+## [405] &quot;Umbrina canariensis&quot;           &quot;Umbrina canosai&quot;              
+## [407] &quot;Umbrina cirrosa&quot;               &quot;Upeneus spp&quot;                  
+## [409] &quot;Valamugil seheli&quot;              &quot;Variola louti&quot;                
+## [411] &quot;Xyrichtys novacula&quot;            &quot;Zoarces viviparus&quot;</code></pre>
 <p><br> <strong><em>17. Use the data to do at least one exploratory analysis of your choice. What can you learn?</em></strong></p>
+<p>Following the Fukishima nuclear diseaser in Japan did fishing levels immediately drop? – Since data only goes until 2012, I will compare 2012 levels to 2011 and 2010 levels.</p>
+<pre class="r"><code>fisheries_tidy2 %&gt;% 
+  select(country, year, ASFIS_sciname, catch_tonnes) %&gt;% 
+  filter(country==&quot;Japan&quot;) %&gt;% 
+  filter(year &lt;=2012, year&gt;=2010) %&gt;% 
+  group_by(year) %&gt;% 
+  summarize(
+    total_catch_japan = sum(catch_tonnes, na.rm=TRUE)
+  )</code></pre>
+<pre><code>## # A tibble: 3 x 2
+##    year total_catch_japan
+##   &lt;dbl&gt;             &lt;dbl&gt;
+## 1  2010           3996016
+## 2  2011           3714832
+## 3  2012            531113</code></pre>
+<p>Wow! The fishing industry seems to have been really affected by the nucelear diseaser.</p>
 <p><br><br><br></p>
 </div>
 

@@ -161,7 +161,7 @@ n_distinct(fisheries_tidy2$ASFIS_spcode)
 ```{r}
 global_total_catch_2000 <- fisheries_tidy2 %>% 
   group_by(country) %>%
-  filter(year=="2000") %>% 
+  filter(year==2000) %>% 
   summarize (
     total_catch = sum(catch_tonnes, na.rm=TRUE) 
   ) %>% 
@@ -179,18 +179,129 @@ In 2000, Peru was the country with the largest total catch (in tonnes).
 
 ***13. Which country caught the most sardines (_Sardina_) between the years 1990-2000?***
 
+```{r}
+fisheries_tidy2$year <- as.numeric(fisheries_tidy2$year)
+fisheries_tidy2$ASFIS_sciname <- as.character(fisheries_tidy2$ASFIS_sciname)
+```
+
+```{r}
+sardine_total <- fisheries_tidy2 %>% 
+  select(year, ASFIS_sciname, ISSCAAP_spgroupname, country, catch_tonnes) %>%
+  filter(year >=1990, year<=2000, ASFIS_sciname=="Sardina pilchardus") %>% 
+  group_by(country) %>% 
+  summarize(sardina_catch_tonnes = sum(catch_tonnes, na.rm=TRUE)) %>% 
+  arrange(desc(sardina_catch_tonnes))
+```
+
+```{r}
+head(sardine_total)
+```
+Between 1990 and 2000, Morocco caught the most Sardina pilchardus with 4785190 tonnes caught.
+
+
 
 <br>
 ***14. Which five countries caught the most cephalopods between 2008-2012?***
 
+```{r}
+ cephalopod_total <- fisheries_tidy2 %>% 
+  select(country, year, ISSCAAP_spgroupname, catch_tonnes) %>% 
+  filter(ISSCAAP_spgroupname == "Squids, cuttlefishes, octopuses") %>% 
+  filter(year >=2008, year <=2012) %>% 
+  group_by(country) %>% 
+  summarize(cephalopod_catch_tonnes = sum(catch_tonnes, na.rm=TRUE)) %>% 
+  arrange(desc(cephalopod_catch_tonnes))
+```
+
+```{r}
+head(cephalopod_total)
+```
+
+Between 2008 and 2012, China caught the most cepalopods with 4785139 tonnes caught.
+
+
 <br>
 ***15. Given the top five countries from question 12 above, which species was the highest catch total? The lowest?***
+
+The top five countries with the highest global catch in 2000 are: Peru, Japan, The United States, Chile, and Indonesia. 
+
+```{r}
+top5 <- c("Peru", "Japan","United States of America", "Chile", "Indonesia")
+```
+
+
+```{r}
+top5_catch <- fisheries_tidy2 %>% 
+  select(country, year, ASFIS_sciname, catch_tonnes) %>% 
+  filter(year==2000) %>% 
+  filter(country %in% top5) %>% 
+  group_by(ASFIS_sciname) %>% 
+  summarize(
+    catch_tonnes = max(catch_tonnes, na.rm=TRUE)
+  ) %>% 
+  arrange(desc(catch_tonnes))
+```
+
+Among the top 5 countries with the highest catch in 2000, `Engraulis ringens` was the most caught fish.
+```{r}
+top_n(top5_catch, 5, catch_tonnes)
+```
+
+
+```{r}
+top_n(top5_catch,-19, catch_tonnes)
+```
+
+Among the top 5 countries with the highest catch in 2000, `Tresus spp`, `Tawera gayi`, `Pleuronichthys decurrens`, `Lobotes surinamensis`, `Caulolatilus microps`, `Carcharodon carcharias` `Carcharias taurus` and `Brotula barbata` were all tied for the least caught.
+
 
 <br>
 ***16. In some cases, the taxonomy of the fish being caught is unclear. Make a new data frame called `coastal_fish` that shows the taxonomic composition of "Miscellaneous coastal fishes" within the ISSCAAP_spgroupname column.***
 
+
+```{r}
+coastal_fish <- fisheries_tidy2 %>% 
+  select(ISSCAAP_spgroupname, ASFIS_sciname) %>% 
+  filter(ISSCAAP_spgroupname == "Miscellaneous coastal fishes") %>% 
+  pivot_longer(cols = ASFIS_sciname,
+               names_to = "species",
+               values_to= "taxa"
+  )
+```
+
+```{r warning=TRUE}
+coastal_fish$taxa <- as.factor(coastal_fish$taxa)
+```
+
+```{r}
+nlevels(coastal_fish$taxa)
+```
+
+
+Miscellaneous coastal fishes  are comprised of the following `412` species:
+```{r}
+levels(coastal_fish$taxa)
+```
+
+
 <br>
 ***17. Use the data to do at least one exploratory analysis of your choice. What can you learn?***
+
+Following the Fukishima nuclear diseaser in Japan did fishing levels immediately drop? -- Since data only goes until 2012, I will compare 2012 levels to 2011 and 2010 levels.
+
+```{r}
+fisheries_tidy2 %>% 
+  select(country, year, ASFIS_sciname, catch_tonnes) %>% 
+  filter(country=="Japan") %>% 
+  filter(year <=2012, year>=2010) %>% 
+  group_by(year) %>% 
+  summarize(
+    total_catch_japan = sum(catch_tonnes, na.rm=TRUE)
+  )
+```
+
+Wow! The fishing industry seems to have been really affected by the nucelear diseaser.
+
 
 
 <br><br><br>
