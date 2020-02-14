@@ -386,7 +386,10 @@ Terrestrial amphibians are the most represented whilist fossorial are the least 
 
 
 <br>
+
 **10. For the amphibio data, we are interested to know if body size is correlated with litter size? Make a plot that shows this relationship. You should notice that there are outliers. Can you think of a way to identify the outliers for both body size and litter size? What happens when you then re-plot the data?**
+
+<br>
 
 
 ```r
