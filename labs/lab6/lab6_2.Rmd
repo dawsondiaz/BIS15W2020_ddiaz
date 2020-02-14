@@ -105,6 +105,26 @@ homerange %>%
 1. Make a barplot that shows locomotion type by `primarymethod`. Try both a stacked barplot and `position="dodge"`.
 
 
+```{r}
+homerange %>% 
+  ggplot(aes(x=locomotion, fill=primarymethod))+geom_bar(position="dodge")
+```
+
+```{r}
+homerange %>% 
+  ggplot(aes(x=locomotion, fill=primarymethod))+geom_bar()+labs(
+    title="Locomotion by Primary Method",
+    y=NULL,
+    x="Locomotion",
+    legend.title="Primary Method"
+      )+theme(
+    plot.title = element_text(size=rel(1.25), hjust=0.5, vjust=2.50),
+    legend.title = element_text(size=rel(1.1))
+    )
+```
+
+
+
 ## Histograms and Density Plots
 Histograms are frequently used by biologists; they show the distribution of continuous variables. As students, you almost certainly have seen histograms of grade distributions. Without getting into the statistics, a histogram `bins` the data and you specify the number of bins that encompass a range of observations. For something like grades, this is easy because the number of bins corresponds to the grades A-F. By default, R uses a formula to calculate the number of bins but some adjustment is often required.  
 
@@ -112,7 +132,7 @@ What does the distribution of body mass look like in the homerange data?
 ```{r}
 homerange %>% 
   ggplot(aes(x = log10.mass)) +
-  geom_histogram(alpha = 0.6, color = "black")+
+  geom_histogram(alpha = 0.6, color = "grey")+
   labs(title = "Distribution of Body Mass")
 ```
 
@@ -120,7 +140,7 @@ homerange %>%
 ```{r}
 homerange %>% 
   ggplot(aes(x = log10.mass)) +
-  geom_density(fill="steelblue", alpha  =0.6, color = "black")+
+  geom_density(fill="salmon", alpha  =0.6, color = "grey")+
   labs(title = "Distribution of Body Mass")
 ```
 
@@ -128,19 +148,34 @@ I like to see both the histogram and the density curve so I often plot them toge
 ```{r message=FALSE}
 homerange %>% 
   ggplot(aes(x=log10.mass)) +
-  geom_histogram(aes(y = ..density..), binwidth = .4, fill = "steelblue", alpha = 0.8, color = "black")+
-  geom_density(color = "red")+
+  geom_histogram(aes(y = ..density..), binwidth = .4, fill = "steelblue", alpha = 0.8, color = "grey")+
+  geom_density(color = "white")+
   labs(title = "Distribution of Body Mass")
 ```
 
 ## Practice
 1. Make a histogram of `log10.hra`. Make sure to add a title.
 
+```{r}
+homerange %>% 
+  ggplot(aes(x=log10.hra))+geom_histogram(color="grey")
+```
+
+
 
 2. Now plot the same variable using `geom_density()`.
-
+```{r}
+homerange %>% 
+  ggplot(aes(x=log10.hra))+geom_density(fill="black", color="grey")
+```
 
 3. Combine them both!
+
+```{r}
+homerange %>% 
+  ggplot(aes(x=log10.hra))+geom_histogram(aes(y=..density..), color="green", fill="pink")+geom_density(color="red")
+```
+
 
 
 ## Create Categories with mutate and case_when()
@@ -166,7 +201,44 @@ homerange %>%
 ## Practice
 1. Use case_when() to make a new column `range_category` that breaks down `log10.hra` into very small, small, medium, and large classes based on quartile.
 
+
+```{r}
+quartiles <- homerange %>% 
+  select(log10.hra) %>% 
+  summary()
+```
+
+```{r}
+quartiles
+```
+
+
+
+
+```{r}
+homerange <- homerange %>% 
+  mutate(
+    range_category = case_when(
+      log10.hra <= 3.653 ~ "very small",
+      log10.hra > 3.653 & log10.hra <= 4.595 ~ "small",
+      log10.hra > 4.595 & log10.hra <=6.016 ~ "medium",
+      log10.hra > 6.016 ~ "large"
+      
+    )
+  )
+    
+
+```
+
+
 2. How many and which taxonomic classes are represented in each of the `range_category` classes?
+
+```{r}
+homerange %>% 
+  select(taxon, class, range_category) %>% 
+  ggplot(aes(x=range_category, fill=taxon))+geom_bar(stat="count")
+```
+
 
 
 3. Isolate the small `range_category` and plot the range of `log10.mass` by taxonomic class.
