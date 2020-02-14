@@ -1,0 +1,26 @@
+---
+title: "dawsondiaz"
+author: "dawsondiaz"
+date: "2/14/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+```{r}
+data <- readr::read_csv("cdc-113-ICD10.csv")
+```
+
+```{r}
+glimpse(data)
+```
+
+## Clean Data
+```{r}
+data
+```
+
+
