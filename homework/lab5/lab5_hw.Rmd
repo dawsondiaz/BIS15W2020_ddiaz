@@ -101,7 +101,7 @@ amniota %>%
   naniar::miss_var_summary()
 ```
 
-
+It makes sense that Mammalia would have most/all its `egg_mass_g` data missing since most mammals do not lay eggs. However, I would epxect that Aves would have more of its data present.
 <br>
 **6. Which taxonomic classes are represented in the data? Summarize this in a chart then make a barplot that shows the proportion of observations in each taxonomic class.**
 
@@ -158,5 +158,55 @@ ggplot(amniota_species_by_class,  mapping=aes(x=class, y=species))+geom_bar(stat
 
 **9. The `amphibio` data includes information on ecology. Each species is classified as fossorial, terrestrial, aquatic, or arboreal. How many species are in each of these categories? Make a bar plot to visualize these results. Which category is most/ least represented in the data?**
 
+```{r}
+amphibio_by_eco <- amphibio %>% 
+  summarize(
+    fossorial = sum(Fos, na.rm=TRUE),
+    terrestrial= sum(Ter, na.rm=TRUE),
+    aquatic= sum(Aqu,na.rm=TRUE),
+    arboreal= sum(Arb,na.rm=TRUE)) %>% 
+  pivot_longer(fossorial:arboreal,
+    names_to = "ecology",
+    values_to = "count"
+  )
+```
 
+```{r}
+amphibio_by_eco
+```
+
+
+```{r}
+ggplot(amphibio_by_eco, mapping = aes(x=ecology, y=count))+geom_bar(stat="identity")
+```
+
+Terrestrial amphibians are the most represented whilist fossorial are the least represented.
+
+
+<br>
 **10. For the amphibio data, we are interested to know if body size is correlated with litter size? Make a plot that shows this relationship. You should notice that there are outliers. Can you think of a way to identify the outliers for both body size and litter size? What happens when you then re-plot the data?**
+
+```{r warning=FALSE}
+amphibio %>%
+  select(Body_size_mm, Litter_size_min_n, Litter_size_max_n) %>%
+  rowwise() %>% mutate(Litter_size_avg_n = mean(c(Litter_size_min_n, Litter_size_max_n),  na.rm=TRUE)) %>% 
+  ggplot(amphibio_plot, mapping=aes(x=Body_size_mm, y=Litter_size_avg_n))+geom_jitter()
+```
+
+<br>
+We can filter out  all values of `litter_size_avg_n` above 1000 to see if any relationship exists. It would  appear as if no clear relationship exists.
+
+
+```{r warning=FALSE}
+amphibio %>% 
+  select(Litter_size_min_n, Body_size_mm) %>% 
+  filter(Litter_size_min_n < 1000) %>% 
+  ggplot(mapping=aes(x=Body_size_mm, y=Litter_size_min_n))+geom_jitter()+geom_smooth(method=lm, se=T)
+```
+<br><br><br>
+
+
+
+
+
+
