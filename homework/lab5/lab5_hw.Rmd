@@ -41,7 +41,7 @@ amphibio <-
 ```
 
 ### Questions  
-**1. First, do some exploratory analysis of both data sets. What is the structure, column names, and dimensions?**  
+**1. First, do some exploratory analysis of both data sets. What is the structure, column names, and dimensions?**
 ```{r}
 glimpse(amniota)
 ```
@@ -50,7 +50,7 @@ glimpse(amniota)
 glimpse(amphibio)
 ```
 <br>
-**2. How many total NAs are in each data set? Do these values make sense? Are NAs represented by any other values?**   
+**2. How many total NAs are in each data set? Do these values make sense? Are NAs represented by any other values?**
 
 In the `amniota` dataset, NA values are represented as `-999` so they are not picked up by the `is.na()` function.
 
@@ -69,7 +69,7 @@ amphibio %>%
 
 <br>
 
-**3. Make any necessary replacements in the data such that all NAs appear as "NA".**   
+**3. Make any necessary replacements in the data such that all NAs appear as "NA".**
 
 We only need to fix the `amniota` dataset using the following command:
 ```{r}
@@ -80,7 +80,7 @@ amniota <- amniota %>%
 
 
 <br>
-**4. Use the package `naniar` to produce a summary, including percentages, of missing data in each column for both data sets.** 
+**4. Use the package `naniar` to produce a summary, including percentages, of missing data in each column for both data sets.**
 
 ```{r}
 naniar::miss_var_summary(amphibio)
@@ -92,7 +92,8 @@ naniar::miss_var_summary(amniota)
 
 
 <br>
-**5. For the `amniota` data, calculate the number of NAs in the `egg_mass_g` column sorted by taxonomic class; i.e. how many NAs are present in the `egg_mass_g` column in birds, mammals, and reptiles? Does this results make sense biologically? How do these results affect your interpretation of NAs?**  
+
+**5. For the `amniota` data, calculate the number of NAs in the `egg_mass_g` column sorted by taxonomic class; i.e. how many NAs are present in the `egg_mass_g` column in birds, mammals, and reptiles? Does this results make sense biologically? How do these results affect your interpretation of NAs?**
 
 ```{r message=FALSE, warning=FALSE}
 amniota %>% 
@@ -101,8 +102,10 @@ amniota %>%
   naniar::miss_var_summary()
 ```
 
-It makes sense that Mammalia would have most/all its `egg_mass_g` data missing since most mammals do not lay eggs. However, I would epxect that Aves would have more of its data present.
+It makes sense that Mammalia would have most/all its `egg_mass_g` data missing since most mammals do not lay eggs. However, I would expect that Aves would have more of its data present.
+
 <br>
+
 **6. Which taxonomic classes are represented in the data? Summarize this in a chart then make a barplot that shows the proportion of observations in each taxonomic class.**
 
 Birds, Mammals and Reptiles are represented in the `amniota` dataset.
@@ -116,6 +119,7 @@ amniota %>%
 
 
 <br>
+
 **7. Let's explore the taxonomic composition of the data a bit more. How many genera are represented by taxonomic class? Present this as a data table and bar plot.**
 
 ```{r}
@@ -137,6 +141,7 @@ ggplot(amniota_genera_by_class,  mapping=aes(x=class, y=genera))+geom_bar(stat="
 
 
 
+<br>
 
 **8. Lastly, how many species are represented in each taxonomic class? Present this as a data table and bar plot.**
 
