@@ -8,12 +8,11 @@ output:
     theme: spacelab
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+
 
 ### Libraries
-```{r message=FALSE, warning=FALSE}
+
+```r
 #install.packages("tidyverse")
 #install.packages("naniar")
 #install.packages("gapminder")
@@ -28,7 +27,8 @@ library(knitr)
 library(kableExtra)
 ```
 
-```{r}
+
+```r
 # This file uses libraries designed to output clean tables. For best viewing, open lab6_hw.html
 ```
 
@@ -37,18 +37,36 @@ library(kableExtra)
 
 **1. Use the function(s) of your choice to get an idea of the overall structure of the data frame, including its dimensions, column names, variable classes, etc. As part of this, determine how NAs are treated in the data.**
 
-```{r}
+
+```r
 gapminder <- gapminder
 ```
 <br>
-```{r}
+
+```r
 glimpse(gapminder)
+```
+
+```
+## Observations: 1,704
+## Variables: 6
+## $ country   <fct> Afghanistan, Afghanistan, Afghanistan, Afghanistan, Afghani…
+## $ continent <fct> Asia, Asia, Asia, Asia, Asia, Asia, Asia, Asia, Asia, Asia,…
+## $ year      <int> 1952, 1957, 1962, 1967, 1972, 1977, 1982, 1987, 1992, 1997,…
+## $ lifeExp   <dbl> 28.801, 30.332, 31.997, 34.020, 36.088, 38.438, 39.854, 40.…
+## $ pop       <int> 8425333, 9240934, 10267083, 11537966, 13079460, 14880372, 1…
+## $ gdpPercap <dbl> 779.4453, 820.8530, 853.1007, 836.1971, 739.9811, 786.1134,…
 ```
 
 <br>
 
-```{r}
+
+```r
 any_na(gapminder)
+```
+
+```
+## [1] FALSE
 ```
 It  would appear that no NA values are present, as `NA` or any other common inputs for NA.
 
@@ -56,7 +74,8 @@ It  would appear that no NA values are present, as `NA` or any other common inpu
 **2. Among the interesting variables in gapminder is life expectancy. How has global life expectancy changed between 1952 and 2007?**
 
 Processing the data
-```{r}
+
+```r
 global_lifeExp <- gapminder %>% 
   select(country, year, lifeExp)  %>% 
   filter(year>=1952 & year<=2007) %>% 
@@ -66,14 +85,75 @@ global_lifeExp <- gapminder %>%
 
 <br>
 `lifeExp_avg` summarized in a table
-```{r}
+
+```r
 kable(global_lifeExp) %>% 
   kable_styling(bootstrap_options = "striped", full_width = F, position="left")
 ```
+
+<table class="table table-striped" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> year </th>
+   <th style="text-align:right;"> lifeExp_avg </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;"> 1952 </td>
+   <td style="text-align:right;"> 49.05762 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1957 </td>
+   <td style="text-align:right;"> 51.50740 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1962 </td>
+   <td style="text-align:right;"> 53.60925 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1967 </td>
+   <td style="text-align:right;"> 55.67829 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1972 </td>
+   <td style="text-align:right;"> 57.64739 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1977 </td>
+   <td style="text-align:right;"> 59.57016 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1982 </td>
+   <td style="text-align:right;"> 61.53320 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1987 </td>
+   <td style="text-align:right;"> 63.21261 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1992 </td>
+   <td style="text-align:right;"> 64.16034 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1997 </td>
+   <td style="text-align:right;"> 65.01468 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2002 </td>
+   <td style="text-align:right;"> 65.69492 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2007 </td>
+   <td style="text-align:right;"> 67.00742 </td>
+  </tr>
+</tbody>
+</table>
 <br>
 
 `lifeExp_avg` summarized as a line graph
-```{r}
+
+```r
 ggplot(global_lifeExp, aes(x=year, y=lifeExp_avg))+
   geom_line()+
   labs(
@@ -86,6 +166,8 @@ ggplot(global_lifeExp, aes(x=year, y=lifeExp_avg))+
         axis.title.y = element_text(margin = margin(t = 0, r = 15, b = 0, l = 0)),
         axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)))
 ```
+
+![](lab6_hw_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
 
 <br><br>
 
