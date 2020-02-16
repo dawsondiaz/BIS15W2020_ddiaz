@@ -27,6 +27,11 @@ library(knitr)
 library(kableExtra)
 ```
 
+```r
+options(scipen=999)
+```
+
+
 
 ```r
 # This file uses libraries designed to output clean tables. For best viewing, open lab6_hw.html
@@ -166,7 +171,7 @@ ggplot(global_lifeExp, aes(x=year, y=lifeExp_avg))+
         axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)))
 ```
 
-![](lab6_hw_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
+![](lab6_hw_files/figure-html/unnamed-chunk-9-1.png)<!-- -->
 
 <br><br>
 **3. How do the distributions of life expectancy compare for the years 1952 and 2007? _Challenge: Can you put both distributions on a single plot?_**
@@ -196,13 +201,13 @@ lifeExp_2007 <- gapminder %>%
     y= NULL) +
   scale_x_continuous(breaks = seq(0, 85, by = 5), limits=c(0,100))+
   scale_y_continuous(breaks = seq(0, 30, by = 10), limits = c(0,35))+
-  theme(plot.title = element_text(size = 14, face = "bold", vjust = 3.5, margin = margin(t=5)),
+  theme(plot.title = element_text(size = 14, face = "bold", vjust = 3.5, margin = margin(t=15)),
         axis.text = element_text(size = 12),
         axis.title = element_text(size = 12),
         axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)))
 ```
 
-![](lab6_hw_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
+![](lab6_hw_files/figure-html/unnamed-chunk-12-1.png)<!-- -->
 
 
 ```r
@@ -214,13 +219,13 @@ lifeExp_2007 <- gapminder %>%
     y= NULL) +
   scale_x_continuous(breaks = seq(0, 85, by = 5), limits=c(0,100))+
   scale_y_continuous(breaks = seq(0, 30, by = 10), limits = c(0,35))+
-  theme(plot.title = element_text(size = 14, face = "bold", vjust = 3.5, margin = margin(t=5)),
+  theme(plot.title = element_text(size = 14, face = "bold", vjust = 3.5, margin = margin(t=15)),
         axis.text = element_text(size = 12),
         axis.title = element_text(size = 12),
         axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)))
 ```
 
-![](lab6_hw_files/figure-html/unnamed-chunk-12-1.png)<!-- -->
+![](lab6_hw_files/figure-html/unnamed-chunk-13-1.png)<!-- -->
 
 
 
@@ -234,13 +239,13 @@ lifeExp_2007 <- gapminder %>%
     y= NULL) +
   scale_x_continuous(breaks = seq(0, 85, by = 5), limits=c(0,100))+
   scale_y_continuous(breaks = seq(0, 30, by = 10), limits = c(0,40))+
-  theme(plot.title = element_text(size = 14, face = "bold", vjust = 3.5, margin = margin(t=5)),
+  theme(plot.title = element_text(size = 14, face = "bold", vjust = 3.5, margin = margin(t=15)),
         axis.text = element_text(size = 12),
         axis.title = element_text(size = 12),
         axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)))
 ```
 
-![](lab6_hw_files/figure-html/unnamed-chunk-13-1.png)<!-- -->
+![](lab6_hw_files/figure-html/unnamed-chunk-14-1.png)<!-- -->
 
 <br><br>
 **4. Your answer above doesn't tell the whole story since life expectancy varies by region. Make a summary that shows the min, mean, and max life expectancy by continent for all years represented in the data.**
@@ -248,7 +253,7 @@ lifeExp_2007 <- gapminder %>%
 
 
 ```r
-global<- gapminder %>% 
+lifeExp_continent<- gapminder %>% 
   select(continent, country, year, lifeExp) %>% 
   group_by(continent, year) %>% 
   summarize(
@@ -259,7 +264,7 @@ global<- gapminder %>%
 
 
 ```r
-kable(global) %>% 
+kable(lifeExp_continent) %>% 
     kable_styling(bootstrap_options = "striped", full_width = F, position="left")  %>% 
   scroll_box(width="450px", height = "500px")
 ```
@@ -705,16 +710,16 @@ kable(global) %>%
 
 
 ```r
-global %>% 
+lifeExp_continent %>% 
   ggplot(aes(x=year, y=lifeExp_mean, color=continent))+geom_line()+
   labs(
     title= "Global Life Expectancy by Continent",
     x= "Year",
     y= "Life Expectancy (years)",
     color= "") +
-  scale_x_continuous(breaks = seq(1950, 2007, by = 10), limits=c(1950,2010))+
+  scale_x_continuous(breaks = seq(1950, 2010, by = 10), limits=c(1950,2010))+
   scale_y_continuous(breaks= seq(30,90, by=10), limits = c(30,90))+
-  theme(plot.title = element_text(size = 14, face="bold", vjust = 3.5, margin = margin(t=5)),
+  theme(plot.title = element_text(size = 14, face="bold", vjust = 3.5, margin = margin(t=15)),
         axis.text = element_text(size = 12),
         axis.title = element_text(size = 12),
         legend.title = element_text(size=12, face="bold"),
@@ -722,23 +727,224 @@ global %>%
         axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)))
 ```
 
-![](lab6_hw_files/figure-html/unnamed-chunk-16-1.png)<!-- -->
+![](lab6_hw_files/figure-html/unnamed-chunk-17-1.png)<!-- -->
 
 
 <br><br>
 **6. We are interested in the relationship between per capita GDP and life expectancy; i.e. does having more money help you live longer?**
 
+
+
+```r
+gapminder %>% 
+  select(country, continent, year, lifeExp, gdpPercap) %>%
+  ggplot(aes(x=gdpPercap, y=lifeExp))+geom_point()+
+  labs(
+    title= "GDP Per Capita vs Life Expectancy",
+    x= "GDP Per Capita",
+    y= "Life Expectancy (years)")+
+  scale_x_continuous(breaks = seq(0, 120000, by = 30000), limits=c(0,120000))+
+  scale_y_continuous(breaks= seq(20,100, by=20), limits = c(20,100))+
+  theme(plot.title = element_text(size = 14, face="bold", vjust = 3.5, margin = margin(t=15)),
+        axis.text = element_text(size = 12),
+        axis.title = element_text(size = 12),
+        legend.title = element_text(size=12, face="bold"),
+        axis.title.y = element_text(margin = margin(t = 0, r = 15, b = 0, l = 0)),
+        axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)))+geom_smooth(method="lm", se=T)
+```
+
+![](lab6_hw_files/figure-html/unnamed-chunk-18-1.png)<!-- -->
+
 <br><br>
 **7. There is extreme disparity in per capita GDP. Rescale the x axis to make this easier to interpret. How would you characterize the relationship?**
+
+
+```r
+gapminder %>% 
+  select(country, continent, year, lifeExp, gdpPercap) %>%
+  mutate(gdpPercap_log = log(gdpPercap)) %>% #correct for outliers
+  ggplot(aes(x=gdpPercap_log, y=lifeExp))+geom_point()+
+  labs(
+    title= "GDP Per Capita vs Life Expectancy",
+    x= "log(GDP Per Capita)",
+    y= "Life Expectancy (years)")+
+  scale_x_continuous(breaks = seq(4, 15, by = 3), limits=c(4,13))+
+  scale_y_continuous(breaks= seq(20,100, by=20), limits = c(20,100))+
+  theme(plot.title = element_text(size = 14, face="bold", vjust = 3.5, margin = margin(t=15)),
+        axis.text = element_text(size = 12),
+        axis.title = element_text(size = 12),
+        legend.title = element_text(size=12, face="bold"),
+        axis.title.y = element_text(margin = margin(t = 0, r = 15, b = 0, l = 0)),
+        axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)))+
+  geom_smooth(method=lm, se=T)
+```
+
+![](lab6_hw_files/figure-html/unnamed-chunk-19-1.png)<!-- -->
+
+I would characterize the relationship between GDP Per Capita and Life Expectancy as positively correlated. This would suggest that as GDP goes up, you would expect life expectancy to increase as well.
+
+<br>
+Another visualization is to add a third variable `continent`
+
+```r
+gapminder %>% 
+  select(country, continent, year, lifeExp, gdpPercap) %>%
+  mutate(gdpPercap_log = log(gdpPercap)) %>% #correct for outliers
+  ggplot(aes(x=gdpPercap_log, color=continent, y=lifeExp))+geom_point()+
+  labs(
+    title= "GDP Per Capita vs Life Expectancy by Continent",
+    x= "log(GDP Per Capita)",
+    y= "Life Expectancy (years)",
+    color=NULL,
+    fill=NULL)+
+  scale_x_continuous(breaks = seq(4, 15, by = 3), limits=c(4,13))+
+  scale_y_continuous(breaks= seq(20,100, by=20), limits = c(20,100))+
+  theme(plot.title = element_text(size = 14, face="bold", vjust = 3.5, margin = margin(t=15)),
+        axis.text = element_text(size = 12),
+        axis.title = element_text(size = 12),
+        legend.title = element_text(size=12, face="bold"),
+        axis.title.y = element_text(margin = margin(t = 0, r = 15, b = 0, l = 0)),
+        axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)))+
+  geom_smooth(method=lm, se=T)
+```
+
+![](lab6_hw_files/figure-html/unnamed-chunk-20-1.png)<!-- -->
+
+
 
 <br><br>
 **8. Which countries have had the largest population growth since 1952?**
 
+
+```r
+top5_popGrowth <- gapminder %>% 
+  select(country, pop) %>% 
+  group_by(country) %>% 
+  summarize(growth = max(pop)-min(pop)) %>% 
+  arrange(desc(growth)) %>% 
+  head(n=5)
+```
+
+The top 5 countries with the most population growth between 1952.
+
+
+```r
+kable(top5_popGrowth) %>% 
+    kable_styling(bootstrap_options = "striped", full_width = F, position="left")
+```
+
+<table class="table table-striped" style="width: auto !important; ">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> country </th>
+   <th style="text-align:right;"> growth </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> China </td>
+   <td style="text-align:right;"> 762419569 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> India </td>
+   <td style="text-align:right;"> 738396331 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> United States </td>
+   <td style="text-align:right;"> 143586947 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Indonesia </td>
+   <td style="text-align:right;"> 141495000 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Brazil </td>
+   <td style="text-align:right;"> 133408087 </td>
+  </tr>
+</tbody>
+</table>
+
 <br><br>
 **9. Use your results from the question above to plot population growth for the top five countries since 1952.**
+
+
+```r
+gapminder %>% 
+  select(country, year, pop) %>% 
+  filter(country %in% c("China", "India", "United States", "Indonesia", "Brazil")) %>% 
+  ggplot(aes(x=year, y=pop, color=country))+geom_line()+
+  labs(
+    title= "Country Population by Year",
+    x= "Year",
+    y= "Population",
+    color=NULL)+
+  scale_x_continuous(breaks = seq(1950, 2010, by = 10), limits=c(1950,2010))+
+  scale_y_continuous(breaks= seq(50000000,1600000000, by=250000000), limits = c(50000000,1500000000))+
+  theme(plot.title = element_text(size = 14, face="bold", hjust=.1, vjust = 3.5, margin = margin(t=15)),
+        axis.text = element_text(size = 12),
+        axis.title = element_text(size = 12),
+        legend.title = element_text(size=12, face="bold"),
+        axis.title.y = element_text(margin = margin(t = 0, r = 15, b = 0, l = 0)),
+        axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)))
+```
+
+![](lab6_hw_files/figure-html/unnamed-chunk-23-1.png)<!-- -->
+
+
 
 <br><br>
 **10. How does per capita GDP growth compare between these same five countries?**
 
+```r
+gapminder %>% 
+  select(country, year, gdpPercap) %>% 
+  filter(country %in% c("China", "India", "United States", "Indonesia", "Brazil")) %>% 
+  ggplot(aes(x=year, y=gdpPercap, color=country))+geom_line()+
+  labs(
+    title= "GDP Per Capita by Year",
+    x= "Year",
+    y= "GDP Per Capita",
+    color=NULL)+
+  scale_x_continuous(breaks = seq(1950, 2010, by = 10), limits=c(1950,2010))+
+  scale_y_continuous(breaks= seq(0,50000, by=10000), limits = c(0,50000))+
+  theme(plot.title = element_text(size = 14, face="bold", vjust = 3.5, margin = margin(t=15)),
+        axis.text = element_text(size = 12),
+        axis.title = element_text(size = 12),
+        legend.title = element_text(size=12, face="bold"),
+        axis.title.y = element_text(margin = margin(t = 0, r = 15, b = 0, l = 0)),
+        axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)))
+```
+
+![](lab6_hw_files/figure-html/unnamed-chunk-24-1.png)<!-- -->
+
+While China and India have had the highest growth in population since 1952, the United States has had the highest growth in GDP Per capita. This is not very meaningful however, since GDP per capita is caculated by dividing the total GDP by the population. So for a more meaninful visualization, I will calculate GDP.
+
+<br>
+
+
+```r
+gapminder %>% 
+  select(country, year, gdpPercap, pop) %>% 
+  filter(country %in% c("China", "India", "United States", "Indonesia", "Brazil")) %>% 
+  mutate(gdp = (gdpPercap*pop)) %>% 
+  ggplot(aes(x=year, y=gdp, color=country))+geom_line()+
+  labs(
+    title= "GDP by Year",
+    x= "Year",
+    y= "GDP",
+    color=NULL)+
+  scale_x_continuous(breaks = seq(1950, 2010, by = 10), limits=c(1950,2010))+
+  scale_y_continuous(breaks= seq(0,14000000000000, by=2000000000000), limits = c(0,14000000000000))+
+  theme(plot.title = element_text(size = 14, face="bold", vjust = 3.5, margin = margin(t=15)),
+        axis.text = element_text(size = 12),
+        axis.title = element_text(size = 12),
+        legend.title = element_text(size=12, face="bold"),
+        axis.title.y = element_text(margin = margin(t = 0, r = 15, b = 0, l = 0)),
+        axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)))
+```
+
+![](lab6_hw_files/figure-html/unnamed-chunk-25-1.png)<!-- -->
+
+Now we can see that China despite not having grown substially in GDP per capita as shown by the previous graph, we can see that it has substantially grown in its overall GDP.
 
 <br><br><br>
