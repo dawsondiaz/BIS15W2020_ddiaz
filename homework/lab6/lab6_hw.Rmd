@@ -112,12 +112,13 @@ lifeExp_2007 <- gapminder %>%
   labs(
     title= "Global Life Expectancy: 1952",
     x= "Life Expectancy (Years)",
-    y= NULL) +
+    y= "Number of Countries") +
   scale_x_continuous(breaks = seq(0, 85, by = 5), limits=c(0,100))+
   scale_y_continuous(breaks = seq(0, 30, by = 10), limits = c(0,35))+
   theme(plot.title = element_text(size = 14, face = "bold", vjust = 3.5, margin = margin(t=15)),
         axis.text = element_text(size = 12),
         axis.title = element_text(size = 12),
+        axis.title.y = element_text(margin = margin(t = 0, r = 15, b = 0, l = 0)),
         axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)))
 ```
 
@@ -127,12 +128,13 @@ lifeExp_2007 <- gapminder %>%
   labs(
     title= "Global Life Expectancy: 2007",
     x= "Life Expectancy (Years)",
-    y= NULL) +
+    y= "Number of Countries") +
   scale_x_continuous(breaks = seq(0, 85, by = 5), limits=c(0,100))+
   scale_y_continuous(breaks = seq(0, 30, by = 10), limits = c(0,35))+
   theme(plot.title = element_text(size = 14, face = "bold", vjust = 3.5, margin = margin(t=15)),
         axis.text = element_text(size = 12),
         axis.title = element_text(size = 12),
+        axis.title.y = element_text(margin = margin(t = 0, r = 15, b = 0, l = 0)),
         axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)))
 ```
 
@@ -144,12 +146,13 @@ lifeExp_2007 <- gapminder %>%
   labs(
     title= "Global Life Expectancy: 1952 vs 2007",
     x= "Life Expectancy (Years)",
-    y= NULL) +
+    y= "Number of Countries") +
   scale_x_continuous(breaks = seq(0, 85, by = 5), limits=c(0,100))+
   scale_y_continuous(breaks = seq(0, 30, by = 10), limits = c(0,40))+
   theme(plot.title = element_text(size = 14, face = "bold", vjust = 3.5, margin = margin(t=15)),
         axis.text = element_text(size = 12),
         axis.title = element_text(size = 12),
+        axis.title.y = element_text(margin = margin(t = 0, r = 15, b = 0, l = 0)),
         axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)))
   
 ```
