@@ -9,18 +9,61 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+
+### Libraries
+
+```{r message=FALSE, warning=FALSE}
+#install.packages("tidyverse")
+#install.packages("naniar")
+#install.packages("gapminder")
+#install.packages("knitr")
+#install.packages("kableExtra")
+
+
+library(tidyverse)
+library(naniar)
+library(gapminder)
+library(knitr)
+library(kableExtra)
+```
+
+
 ## R Markdown
 ```{r}
-data <- readr::read_csv("cdc-113-ICD10.csv")
+cdc_raw <- readr::read_csv("cdc-ICD10.csv")
 ```
 
 ```{r}
-glimpse(data)
+glimpse(cdc_raw)
 ```
 
 ## Clean Data
+
 ```{r}
-data
+cdc <- cdc_raw %>% 
+  #remove redundant, uncessary columns
+  select(-c("Notes", "Year Code", "State Code", "Ten-Year Age Groups")) %>% 
+
+  #remove several rows with NA values at bottom of data frame
+  na.omit() %>% 
+  
+  #NA in these data sets is coded as "Unreliable"
+  na_if("Unreliable") %>%  
+  
+  #rename column names 
+  dplyr::rename( 
+    state=State,
+    deaths=Deaths,
+    year=Year,
+    age_group= "Ten-Year Age Groups Code",
+    population= Population,
+    crude_rate = "Crude Rate",
+    cause_of_death = "ICD-10 113 Cause List",
+    cause_of_death_code = "ICD-10 113 Cause List Code")
+  
 ```
+
+%>%
+
 
 
