@@ -57,6 +57,7 @@ server <- function(input, output, session) {}
 shinyApp(ui, server)
 ```
 
+
 For the rest of the lab we will work together to build the example app.
 
 ## Shiny Inputs
@@ -149,7 +150,43 @@ Congratulations, you made your first shiny app!
 homerange <- readr::read_csv("data/Tamburelloetal_HomeRangeDatabase.csv", na = c("", "NA", "\\"))
 ```
 
+```{r}
+glimpse(homerange)
+```
+
+```{r}
+homerange %>% 
+  ggplot(aes(x=locomotion, fill=thermoregulation))+geom_bar(position="dodge")
+```
+
+
 2. Build a shiny app that produces a barplot that explores locomotion type with a fill reaction for the variables trophic.guild and thermoregulation.
+
+```{r}
+ui <- fluidPage(
+  selectInput("x", "Select Fill", choices = c("trophic.guild", "thermoregulation"), 
+              selected = "trophic.guild"),
+  plotOutput("plot", width = "800px", height = "600px")
+)
+
+
+server <- function(input, output, session) {
+  output$plot <- renderPlot({
+    ggplot(homerange, aes_string(x = "locomotion", fill = input$x)) + 
+      geom_bar(position="dodge") + 
+      theme_light(base_size = 18) +
+  labs(
+    x= "Locomotion",
+    y= input$x)+
+ggtitle(paste("Locomotion vs",input$x))
+  })
+  
+
+}
+
+shinyApp(ui, server)
+```
+
 
 
 3. The app below adds some nicer aesthetics. It makes a density plot of log10.hra with taxon as a reactive variable. Edit the app to explore log10.hra by locomotion type.  
@@ -187,6 +224,47 @@ server <- function(input, output) {
     filter(taxon == input$taxon) %>% 
     ggplot(aes(x=log10.hra)) + 
     geom_density(color="black", fill="steelblue", alpha=0.6)
+  })
+}
+
+shinyApp(ui, server)
+```
+
+
+```{r}
+ui <- fluidPage(    
+  
+  titlePanel("Log 10 Homerange by locomotion"), # give the page a title
+  
+  # generate a row with a sidebar
+  sidebarLayout(      
+    
+    # define the sidebar with one input
+    sidebarPanel(
+      selectInput("locomotion", " Select Taxon of Interest:", 
+                  choices=unique(homerange$locomotion)),
+      hr(),
+      helpText("Reference: Tamburello N, Cote IM, Dulvy NK (2015) Energy and the scaling of animal space use. The American Naturalist 186(2):196-211.")
+    ),
+    
+    # create a spot for the barplot
+    mainPanel(
+      plotOutput("taxonPlot")  
+    )
+    
+  )
+)
+
+# define a server for the Shiny app
+server <- function(input, output) {
+  
+  # fill in the spot we created for a plot
+  output$taxonPlot <- renderPlot({
+    
+    homerange %>% 
+    filter(locomotion == input$locomotion) %>% 
+    ggplot(aes(x=log10.hra)) + 
+    geom_density(color="steelblue", fill="steelblue", alpha=0.6)
   })
 }
 

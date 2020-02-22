@@ -30,12 +30,18 @@ library(kableExtra)
 
 ## R Markdown
 ```{r}
-cdc_raw <- readr::read_csv("cdc-ICD10.csv")
+cdc_raw <- readr::read_csv("cdc-113-ICD10.csv")
 ```
 
 ```{r}
 glimpse(cdc_raw)
 ```
+
+
+```{r}
+glimpse(cdc)
+```
+
 
 ## Clean Data
 
@@ -63,7 +69,31 @@ cdc <- cdc_raw %>%
   
 ```
 
-%>%
+
+```{r}
+change characters to factors??
+```
+
+
+
+```{r}
+cdc %>% 
+  select(year, state, cause_of_death, deaths) %>%
+  filter(cause_of_death == '#Human immunodeficiency virus (HIV) disease (B20-B24)') %>% 
+  group_by(year) %>% 
+  summarise(
+    total_deaths_HIV = sum(deaths)) %>% 
+  ggplot(aes(x=year, y=total_deaths_HIV))+geom_line()
+
+```
+
+  group_by(year) %>% 
+  filter(cause_of_death == "	
+#Human immunodeficiency virus (HIV) disease (B20-B24)") %>% 
+  summarise(
+    deaths = sum(deaths)
+    
+  )
 
 
 
