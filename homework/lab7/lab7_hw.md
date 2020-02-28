@@ -159,7 +159,7 @@ server <- function(input, output, session) {
 
 shinyApp(ui, server)
 ```
-This app can be found in the homework folder titled `UCAdmit_AllCampuses.R`
+This app can be found in the lab7 homework folder titled `UCAdmit_AllCampuses.R`
 
 
 <br>
@@ -217,7 +217,7 @@ server <- function(input, output, session) {
 
 shinyApp(ui, server)
 ```
-This app can be found in the homework folder titled `UCAdmit_ByCampus.R`
+This app can be found in the lab7 homework folder titled `UCAdmit_ByCampus.R`
 <br>
 
 <br><br><br>
