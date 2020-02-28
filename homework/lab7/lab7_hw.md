@@ -1,21 +1,20 @@
 ---
 title: "Lab 7 Homework"
 author: "Dawson Diaz"
-date: "`r Sys.Date()`"
+date: "2020-02-27"
 output:
   html_document: 
     keep_md: yes
     theme: spacelab
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+
 
 
 
 ### Libraries
-```{r message=FALSE, warning=FALSE}
+
+```r
 library(tidyverse)
 library(shiny)
 library(shinydashboard)
@@ -23,41 +22,88 @@ library(shinydashboard)
 
 ### Data
 The data for this assignment come from the [University of California Information Center](https://www.universityofcalifornia.edu/infocenter). Admissions data were collected for the years 2010-2019 for each UC campus. Admissions are broken down into three categories: applications, admits, and enrollees. The number of individuals in each category are presented by demographic.  
-```{r}
+
+```r
 UC_admit <- readr::read_csv("data/UC_admit.csv")
+```
+
+```
+## Parsed with column specification:
+## cols(
+##   Campus = col_character(),
+##   Academic_Yr = col_double(),
+##   Category = col_character(),
+##   Ethnicity = col_character(),
+##   `Perc FR` = col_character(),
+##   FilteredCountFR = col_double()
+## )
 ```
 
 <br>
 **1. Use the function(s) of your choice to get an idea of the overall structure of the data frame, including its dimensions, column names, variable classes, etc. As part of this, determine if there are NA's and how they are treated.**
 
 
-```{r}
+
+```r
 anyNA(UC_admit)
+```
+
+```
+## [1] TRUE
 ```
 
 This data set does have NA values, they are recognized by R as `NA`
 
 
 <br>
-```{r}
+
+```r
 glimpse(UC_admit)
 ```
-<br>
-```{r}
-UC_admit$Campus <- as.factor(UC_admit$Campus)
-levels(UC_admit$Campus)
 
 ```
+## Observations: 2,160
+## Variables: 6
+## $ Campus          <chr> "Davis", "Davis", "Davis", "Davis", "Davis", "Davis",…
+## $ Academic_Yr     <dbl> 2019, 2019, 2019, 2019, 2019, 2019, 2019, 2019, 2018,…
+## $ Category        <chr> "Applicants", "Applicants", "Applicants", "Applicants…
+## $ Ethnicity       <chr> "International", "Unknown", "White", "Asian", "Chican…
+## $ `Perc FR`       <chr> "21.16%", "2.51%", "18.39%", "30.76%", "22.44%", "0.3…
+## $ FilteredCountFR <dbl> 16522, 1959, 14360, 24024, 17526, 277, 3425, 78093, 1…
+```
 <br>
-```{r}
+
+```r
+UC_admit$Campus <- as.factor(UC_admit$Campus)
+levels(UC_admit$Campus)
+```
+
+```
+## [1] "Berkeley"      "Davis"         "Irvine"        "Los_Angeles"  
+## [5] "Merced"        "Riverside"     "San_Diego"     "Santa_Barbara"
+## [9] "Santa_Cruz"
+```
+<br>
+
+```r
 UC_admit$Category <- as.factor(UC_admit$Category)
 levels(UC_admit$Category)
 ```
 
+```
+## [1] "Admits"     "Applicants" "Enrollees"
+```
+
 <br>
-```{r}
+
+```r
 UC_admit$Ethnicity <- as.factor(UC_admit$Ethnicity)
 levels(UC_admit$Ethnicity)
+```
+
+```
+## [1] "African American" "All"              "American Indian"  "Asian"           
+## [5] "Chicano/Latino"   "International"    "Unknown"          "White"
 ```
 
 
@@ -65,8 +111,8 @@ levels(UC_admit$Ethnicity)
 
 **2. The president of UC has asked you to build a shiny app that shows admissions by ethnicity across all UC campuses. Your app should allow users to explore year, campus, and admit category as interactive variables. Use shiny dashboard and try to incorporate the aesthetics you have learned in ggplot to make the app neat and clean.**
 
-```{r, eval=F}
 
+```r
 UC_admit <- readr::read_csv("data/UC_admit.csv")
 
 ui <- dashboardPage(
@@ -120,8 +166,8 @@ This app can be found in the homework folder titled `UCAdmit_AllCampuses.R`
 **3. Make alternate version of your app above by tracking enrollment at a campus over all of the represented years while allowing users to interact with campus, category, and ethnicity.**
 
 
-```{r eval=FALSE}
 
+```r
 UC_admit <- readr::read_csv("data/UC_admit.csv")
 
 ui <- dashboardPage(
