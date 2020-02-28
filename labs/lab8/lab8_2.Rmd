@@ -48,6 +48,8 @@ dengue <- read.fasta(file = "data/den1.fasta")
 But the sequence is still stored as the first item in the R list, so let's pull it out using double square brackets
 ```{r}
 dengueseq <- dengue[[1]]
+
+dengueseq
 ```
 
 Now we can look at the sequence and learn couple things about it. For example, we can find out how long our sequence is.
@@ -67,23 +69,41 @@ GC(dengueseq)
 
 ##Practice
 1. Using one of the lizard accession numbers from the first half of class, pull that sequence on it's own from GenBank, store it as a .fasta file, and read it into R. Then pull the sequence out of the R list using double square brackets.
+
 ```{r}
+read.GenBank("JF806202", as.character = T)
+```
+
+
+```{r}
+lizardseq <- read.GenBank("JF806202", as.character = T)
+
+write.fasta(names="RAG1-LIZ", sequences=lizardseq, file.out="data/rag1liz.fasta")
 
 ```
+
+
+```{r}
+lizseq <- read.FASTA(file = "data/rag1liz.fasta")
+
+lizseq <- lizardseq[[1]]
+```
+
 
 2. What is the length of this sequence?
 ```{r}
 
+length(lizseq)
 ```
 
 3. Generate a table showing the nucleotide base composition of your chosen sequence.
 ```{r}
-
+table(lizseq)
 ```
 
 4. What is the GC content of the sequence you've chosen?
 ```{r}
-
+GC(lizseq)
 ```
 
 
@@ -154,4 +174,24 @@ source("essai.r")
 ```
 
 ## Practice
-Oh no! You have presented your gopher-louse tree to your boss who responds, "Oh no! Not Jukes and Cantor! We must use the Kimura's 2-parameters distance model." But you're not bothered, you just open the essai.r script in your text editor and replace model = "JC69" with model = "K80". Edit your script and rerun it to generate your trees under this model of evolution. Are the results different than those generated above?  
+Oh no! You have presented your gopher-louse tree to your boss who responds, "Oh no! Not Jukes and Cantor! We must use the Kimura's 2-parameters distance model." But you're not bothered, you just open the essai.r script in your text editor and replace model = "JC69" with model = "K80". Edit your script and rerun it to generate your trees under this model of evolution. Are the results different than those generated above?
+
+
+```{r}
+louse <- read.alignment(system.file("sequences/louse.fasta", package = "seqinr"), format = "fasta") 
+gopher <- read.alignment(system.file("sequences/gopher.fasta", package = "seqinr"), format = "fasta") 
+l.names <- readLines(system.file("sequences/louse.names", package = "seqinr")) 
+g.names <- readLines(system.file("sequences/gopher.names", package = "seqinr"))
+library(ape)
+louse.JC <- dist.dna(as.DNAbin(louse), model = "K80")
+gopher.JC <- dist.dna(as.DNAbin(gopher), model = "K80")
+l <- nj(louse.JC)
+g <- nj(gopher.JC)
+g$tip.label <- paste(1:8, g.names)
+l$tip.label <- paste(1:8, l.names)
+layout(matrix(data = 1:2, nrow = 1, ncol = 2), width=c(1.4, 1))
+par(mar=c(2,1,2,1))
+plot(g, adj = 0.8, cex = 1.4, use.edge.length=FALSE,main = "gopher (host)", cex.main = 2)
+plot(l,direction="l", use.edge.length=FALSE, cex = 1.4,main = "louse (parasite)", cex.main = 2)
+```
+

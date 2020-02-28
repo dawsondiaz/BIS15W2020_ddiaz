@@ -70,8 +70,15 @@ cdc <- cdc_raw %>%
 ```
 
 
+
 ```{r}
-change characters to factors??
+cdc1$cause_of_death <- as.factor(cdc1$cause_of_death)
+```
+
+
+
+```{r}
+levels(cdc$cause_of_death)
 ```
 
 
@@ -79,11 +86,9 @@ change characters to factors??
 ```{r}
 cdc %>% 
   select(year, state, cause_of_death, deaths) %>%
-  filter(cause_of_death == '#Human immunodeficiency virus (HIV) disease (B20-B24)') %>% 
-  group_by(year) %>% 
-  summarise(
-    total_deaths_HIV = sum(deaths)) %>% 
-  ggplot(aes(x=year, y=total_deaths_HIV))+geom_line()
+  filter(cause_of_death == 'Respiratory tuberculosis (A16)') %>% 
+  group_by(state,year) %>% 
+  
 
 ```
 

@@ -49,8 +49,8 @@ With BLASTn we can take a sequence we have acquired (perhaps through sequencing)
 
 SeqinR (Sequences in R) and ape (Analysis of Phylogenetics and Evolution) are packages which include many utilities for dealing with sequence data in R. 
 ```{r cars}
-#install.packages("seqinr")
-#install.packages("ape")
+install.packages("seqinr")
+install.packages("ape")
 ```
 
 ```{r}
@@ -133,7 +133,7 @@ write.dna(lizards_sequences, file ="lizard_fasta_1.fasta", format = "fasta", app
 ## Search by key words
 But what if we don't know the accession numbers for the sequences we want? No worries! R has a package for that! Rentrez (Entrez in R) is a package the interfaces with the NCBI database and allows us to search and pull sequences using key terms.
 ```{r}
-#install.packages("rentrez")
+install.packages("rentrez")
 library(rentrez)
 ```
 
@@ -168,17 +168,17 @@ Open this file in your text editor and have a look. You have downnloaded and for
 
 1. Create your own search of the NCBI nucleotide database using `entrez_search()` for RAG1 sequences of _Ornithorhynchus anatinus_. Limit your returned hits to 10. What is _Ornithorhynchus anatinus_?
 ```{r}
-
+spidersearch <- entrez_search(db="nuccore", term= "_Ornithorhynchus anatinus_[Organism] AND RAG1[GENE]", retmax=10)
 ```
 
 2. Use `entrez_fetch()` to return your database hits as a character vector.
 ```{r}
-
+spiderseq <- entrez_fetch(db="nuccore", id=spidersearch$ids, rettype="fasta")
 ```
 
 3. Now store your own pulled sequence data as a .fasta file using the `write()` function. Remember those line endings!
 ```{r}
-
+write(spiderseq, "data/spiderseq_fasta.fasta", sep="\n")
 ```
 
 ## That's it, let's take a break!   
