@@ -1,0 +1,127 @@
+---
+title: "project-final"
+author: "Dawson Diaz"
+date: "3/2/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Libraries
+
+```{r message=FALSE, warning=FALSE}
+#install.packages("tidyverse")
+#install.packages("naniar")
+#install.packages("gapminder")
+#install.packages("knitr")
+#install.packages("kableExtra")
+
+
+library(tidyverse)
+library(naniar)
+library(gapminder)
+library(knitr)
+library(kableExtra)
+```
+
+
+```{r}
+#import RAW data, include column specifications such that no NA values are introduced.
+
+year_1999 <- readr::read_csv("data/raw/year_1999.csv", col_types = cols("Ten-Year Age Groups Code" = col_character(), "Population" = col_character()))
+year_2000 <- readr::read_csv("data/raw/year_2000.csv", col_types = cols("Ten-Year Age Groups Code" = col_character(), "Population" = col_character()))
+year_2001 <- readr::read_csv("data/raw/year_2001.csv", col_types = cols("Ten-Year Age Groups Code" = col_character(), "Population" = col_character()))
+year_2002 <- readr::read_csv("data/raw/year_2002.csv", col_types = cols("Ten-Year Age Groups Code" = col_character(), "Population" = col_character()))
+year_2003 <- readr::read_csv("data/raw/year_2003.csv", col_types = cols("Ten-Year Age Groups Code" = col_character(), "Population" = col_character()))
+year_2004 <- readr::read_csv("data/raw/year_2004.csv", col_types = cols("Ten-Year Age Groups Code" = col_character(), "Population" = col_character()))
+year_2005 <- readr::read_csv("data/raw/year_2005.csv", col_types = cols("Ten-Year Age Groups Code" = col_character(), "Population" = col_character()))
+year_2006 <- readr::read_csv("data/raw/year_2006.csv", col_types = cols("Ten-Year Age Groups Code" = col_character(), "Population" = col_character()))
+year_2007 <- readr::read_csv("data/raw/year_2007.csv", col_types = cols("Ten-Year Age Groups Code" = col_character(), "Population" = col_character()))
+year_2008 <- readr::read_csv("data/raw/year_2008.csv", col_types = cols("Ten-Year Age Groups Code" = col_character(), "Population" = col_character()))
+year_2009 <- readr::read_csv("data/raw/year_2009.csv", col_types = cols("Ten-Year Age Groups Code" = col_character(), "Population" = col_character()))
+year_2010 <- readr::read_csv("data/raw/year_2010.csv", col_types = cols("Ten-Year Age Groups Code" = col_character(), "Population" = col_character()))
+year_2011 <- readr::read_csv("data/raw/year_2011.csv", col_types = cols("Ten-Year Age Groups Code" = col_character(), "Population" = col_character()))
+year_2012 <- readr::read_csv("data/raw/year_2012.csv", col_types = cols("Ten-Year Age Groups Code" = col_character(), "Population" = col_character()))
+year_2013 <- readr::read_csv("data/raw/year_2013.csv", col_types = cols("Ten-Year Age Groups Code" = col_character(), "Population" = col_character()))
+year_2014 <- readr::read_csv("data/raw/year_2014.csv", col_types = cols("Ten-Year Age Groups Code" = col_character(), "Population" = col_character()))
+year_2015 <- readr::read_csv("data/raw/year_2015.csv", col_types = cols("Ten-Year Age Groups Code" = col_character(), "Population" = col_character()))
+year_2016 <- readr::read_csv("data/raw/year_2016.csv", col_types = cols("Ten-Year Age Groups Code" = col_character(), "Population" = col_character()))
+year_2017 <- readr::read_csv("data/raw/year_2017.csv", col_types = cols("Ten-Year Age Groups Code" = col_character(), "Population" = col_character()))
+year_2018 <- readr::read_csv("data/raw/year_2018.csv", col_types = cols("Ten-Year Age Groups Code" = col_character(), "Population" = col_character()))
+```
+
+```{r}
+#any_na(year_####)
+#returns FALSE
+```
+
+```{r}
+cdc_raw <- rbind(year_1999, year_2000, year_2001, year_2002, year_2003, year_2004, year_2005, year_2006, year_2007, year_2008, year_2009, year_2010, year_2011, year_2012, year_2013, year_2014, year_2015, year_2016, year_2017, year_2018)
+```
+
+```{r}
+glimpse(cdc_raw)
+```
+
+
+```{r}
+#CLEAN DATA
+
+cdc <- cdc_raw %>% 
+  #remove redundant, uncessary columns
+  select(-c("Year Code", "Ten-Year Age Groups Code", "Gender Code")) %>% 
+
+  #NA in these data sets is coded as "Unreliable" or "Not Applicable
+  na_if("Unreliable") %>% 
+  na_if("Not Applicable") %>% 
+  
+  #rename column names 
+  dplyr::rename( 
+    deaths=Deaths,
+    year=Year,
+    gender=Gender,
+    age_group= "Ten-Year Age Groups",
+    population= Population,
+    crude_rate = "Crude Rate",
+    race = Race,
+    race_code = "Race Code",
+    cause_of_death = "ICD-10 113 Cause List",
+    cause_of_death_code = "ICD-10 113 Cause List Code")
+```
+
+
+```{r}
+glimpse(cdc)
+```
+
+
+
+```{r}
+#Make a new .csv master file
+#write.csv(cdc, file="data/cdc.csv")
+```
+
+
+```{r}
+#cdc_test <- readr::read_csv("data/cdcwonder.csv", col_types = cols(X1 = col_skip()))
+```
+
+```{r}
+cdc$cause_of_death <- as.factor(cdc$cause_of_death)
+cdc$cause_of_death_code <- as.factor(cdc$cause_of_death_code)
+cdc$year <- as.factor(cdc$year)
+cdc$race <- as.factor(cdc$race)
+cdc$race_code <- as.factor(cdc$race_code)
+cdc$gender <- as.factor(cdc$gender)
+cdc$age_group <- as.factor(cdc$age_group)
+cdc$deaths <- as.numeric(cdc$deaths)
+cdc$population <- as.numeric(cdc$population)
+```
+
+```{r}
+levels(cdc$cause_of_death)
+```
+
+
