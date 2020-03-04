@@ -24,6 +24,8 @@ library(naniar)
 library(gapminder)
 library(knitr)
 library(kableExtra)
+library(shiny)
+library(shinydashboard)
 ```
 
 
@@ -92,6 +94,15 @@ cdc <- cdc_raw %>%
 ```
 
 
+
+```{r}
+# Remove "#"
+
+cdc <- cdc %>% 
+  mutate(cause_of_death = str_remove(cdc$cause_of_death, "[#]"))
+```
+
+
 ```{r}
 glimpse(cdc)
 ```
@@ -105,7 +116,7 @@ glimpse(cdc)
 
 
 ```{r}
-#cdc_test <- readr::read_csv("data/cdcwonder.csv", col_types = cols(X1 = col_skip()))
+#cdc_test <- readr::read_csv("data/cdc.csv", col_types = cols(X1 = col_skip()))
 ```
 
 ```{r}
@@ -122,6 +133,26 @@ cdc$population <- as.numeric(cdc$population)
 
 ```{r}
 levels(cdc$cause_of_death)
+```
+
+
+### Example 1: Death Frequency (as percent of population) for a Cause of Death by Year
+
+```{r}
+cdc %>% 
+  filter(cause_of_death == "Falls (W00-W19)") %>% 
+
+  group_by(year) %>% 
+  summarise(
+    population = sum(population, na.rm=T),
+    #In the Data, N.S. age groups included in the population of all existing age groups. So it is OK to remove the NA values because it will product the same result.
+    total_deaths = sum(deaths),
+    percent= (total_deaths/population)*100
+    ) %>% 
+  ggplot(aes(x=year, y=percent, group=1))+geom_line()+labs(title="Falling Deaths in The United States", y="Percent of Population", x="Year")+
+  theme(plot.title = element_text(size = 14, face = "bold", vjust = 3.5, hjust=.5, margin = margin(t=15, b=10)),
+        axis.title.y = element_text(margin = margin(t = 0, r = 15, b = 0, l = 0)),
+        axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)))
 ```
 
 
