@@ -1,3 +1,19 @@
+
+
+if (!require("tidyverse")) install.packages('tidyverse')
+library("tidyverse")
+
+if (!require("naniar")) install.packages('naniar')
+library("naniar")
+
+if (!require("shiny")) install.packages('shiny')
+library("shiny")
+
+if (!require("shinydashboard")) install.packages('shinydashboard')
+library("shinydashboard")
+
+
+
 cdc <- readr::read_csv("data/cdc.csv", col_types = cols(X1 = col_skip()))
 
 ui <- dashboardPage(
