@@ -8,4 +8,4 @@
 `Instructor: Dr. Joel Ledford`
 
 
-## Final Project: CDC App Viewer
+### Final Project: CDC Data Viewer https://github.com/dawsondiaz/BIS15W2020_ddiaz/blob/master/project/cdcapp.R
