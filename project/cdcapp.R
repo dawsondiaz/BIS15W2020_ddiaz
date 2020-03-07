@@ -1,27 +1,32 @@
+### CDC DATA VIEWER APP ###
 
-
+## Load Required Packages ##
 if (!require("tidyverse")) install.packages('tidyverse')
 library("tidyverse")
-
 if (!require("naniar")) install.packages('naniar')
 library("naniar")
-
 if (!require("shiny")) install.packages('shiny')
 library("shiny")
-
 if (!require("shinydashboard")) install.packages('shinydashboard')
 library("shinydashboard")
 
+options(scipen = 999)
 
-
+## Load CDC Data ## 
 cdc <- readr::read_csv("data/cdc.csv", col_types = cols(X1 = col_skip()))
+
 
 ui <- dashboardPage(
   dashboardHeader(title = "CDC Data Viewer"),
   dashboardSidebar(
     sidebarMenu(
       menuItem("Home", tabName = "home", icon = icon("home")),
-      menuItem("Cause of Death by Year", tabName = "app1", icon = icon("calendar-alt")))),
+      menuItem("Cause of Death by Year", tabName = "app1", icon = icon("calendar-alt")),
+      menuItem("Age Group Mortality", tabName = "app2", icon = icon("feather"))
+      
+      
+      
+      )),
   dashboardBody(
     tags$head(tags$style(HTML('
         .skin-blue .main-header .navbar {
@@ -202,7 +207,7 @@ ui <- dashboardPage(
               
               
               fluidRow(
-                box(title = "Total Deaths by Selected Cause by Year", width = 4,
+                box(title = "Total Deaths by Selected Cause by Year", width = 6,
                     tableOutput("app1total")
                 ),
                 box(title = "Male vs. Female Deaths by Selected Cause", width = 3,
@@ -217,17 +222,24 @@ ui <- dashboardPage(
               
               
       ),
-      tabItem(tabName= "Other Comparrison",
+      tabItem(tabName= "app2",
               fluidRow(
-                box()
-              )
+                box(title = "Graph Options", width = 12,
+                    selectInput("app2_measure", "Mortality Measure", choices = c("death_per_100k", "total_deaths", "percent_of_group"), selected="death_per_100k"),
+                    selectInput("app2_year", "Year", choices=c("1999","2000","2001","2002","2003","2004","2005","2006","2007","2008","2009","2010","2011","2012","2013","2014","2015","2016","2017","2018"), selected="2018"))),
+              
+              fluidRow(
+                box(width = 12,
+                    plotOutput("app2", width = "800px", height = "500px")))
               
       )
       
     )))
 
 server <- function(input, output, session) { 
+
   
+  ## APP 1 OUTPUT PLOT
   output$app1 <- renderPlot({
     
     cdc %>% 
@@ -240,39 +252,27 @@ server <- function(input, output, session) {
         total_deaths = sum(deaths),
         percent= (total_deaths/population)*100
       ) %>% 
-      ggplot(aes(x=year, y=percent, group=1))+geom_area(fill="blue",color="grey", alpha=0.5)+labs(y="Percent of U.S. Population", x="Year")+ggtitle(paste(input$app1_cause_of_death, "Deaths by Year"))+
+      ggplot(aes(x=year, y=total_deaths, group=1))+geom_area(fill="blue",color="grey", alpha=0.5)+labs(y="Total Deaths", x="Year")+ggtitle(paste(input$app1_cause_of_death, "Deaths by Year"))+
       scale_x_continuous(breaks = seq(1999, 2018, by = 1), limits=c(1999,2018))+
       theme(plot.title = element_text(size = 14, face = "bold", vjust = 3.5, hjust=.5, margin = margin(t=15, b=10)),
             axis.text = element_text(size = 12),
             axis.title = element_text(size = 12),
             axis.title.y = element_text(margin = margin(t = 0, r = 15, b = 0, l = 0)),
-            axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)))
-    
-  })
-  
+            axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)))})
   
   output$app1totalyr <- renderTable({
     cdc %>% 
       filter(cause_of_death == input$app1_cause_of_death) %>% 
       summarise(
-        total_deaths = sum(deaths)
-      )
-    
-    
-    
-  })
+        total_deaths = sum(deaths))})
   
+
   output$app1totalmf <- renderTable({
     cdc %>% 
       filter(cause_of_death == input$app1_cause_of_death) %>% 
       group_by(gender) %>% 
       summarise(
-        total_deaths = sum(deaths)
-      )
-    
-    
-    
-  })
+        total_deaths = sum(deaths))})
   
   output$app1total <- renderTable({
     cdc %>% 
@@ -282,14 +282,33 @@ server <- function(input, output, session) {
         total_deaths = sum(deaths),
         population = sum(population, na.rm=T),
         percent_us_pop= (total_deaths/population)*100
-      )
+      )})
+  
+  
+  output$app2 <- renderPlot({
+    cdc %>% 
+      group_by(age_group, gender, year) %>% 
+      filter(year== input$app2_year) %>% 
+      summarize(
+        total_deaths = sum(deaths),
+        total_population = sum(population),
+        crude_rate = total_deaths/total_population*100000,
+        percent_of_group = total_deaths/total_population) %>% 
     
+      ggplot(aes_string(x="age_group", y=input$app2_measure))+geom_bar(position="dodge",stat="identity")+
+      labs(
+        title= "Deaths by Age Group",
+        x= "Age Group",
+        y= "Variable",
+        color=NULL,
+        fill=NULL)+
+      theme(plot.title = element_text(size = 14, face = "bold", vjust = 3.5, hjust=.5, margin = margin(t=15, b=10)),
+            axis.title.y = element_text(margin = margin(t = 0, r = 15, b = 0, l = 0)),
+            axis.text.x = element_text(angle = 90, hjust=1),
+            axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)))
     
     
   })
-  
-  
-  
   
   session$onSessionEnded(stopApp)
   
