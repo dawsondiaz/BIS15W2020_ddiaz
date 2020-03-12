@@ -1,4 +1,4 @@
-## Dawson Diaz
+# Dawson Diaz
 
 
 ### Repository for BIS015L at UC Davis
