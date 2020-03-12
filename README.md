@@ -1,5 +1,4 @@
-# BIS15W2020_ddiaz
-# Dawson Diaz
+## Dawson Diaz
 
 
 ### Repository for BIS015L at UC Davis
