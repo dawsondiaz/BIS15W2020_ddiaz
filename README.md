@@ -5,14 +5,16 @@
 
 `BIS15L - Introduction to Data Science for Biologists`
 
-Taken: Winter Quarter 2020
+`Taken: Winter Quarter 2020`
 
 Instructor: [Dr. Joel Ledford](https://github.com/jmledford3115)
 
 Teaching Assistant: Rebecca Godwin
 
-[Class Website](https://jmledford3115.github.io/datascibiol/)
-[Class Repository](https://github.com/jmledford3115/BIS15-W20-DataScienceBiologists)
+
+**[Class Website](https://jmledford3115.github.io/datascibiol/)**
+
+**[Class Repository](https://github.com/jmledford3115/BIS15-W20-DataScienceBiologists)**
 
 ### About
 
